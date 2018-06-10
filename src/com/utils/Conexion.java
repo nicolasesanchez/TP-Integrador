@@ -2,8 +2,16 @@ package com.utils;
 
 import com.entities.Cliente;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import com.microsoft.sqlserver.jdbc.*;
@@ -18,7 +26,8 @@ public class Conexion {
 	// tiene los libros
 	// Todo esta 'ip' es para conectar local en sql windows
 	private final String ip = "jdbc:sqlserver://localhost:1433;databaseName=myDB;integratedSecurity=true";
-	//private final String ip = "jdbc:sqlserver://10.1.20.15:1433;databaseName=BD21A07;user=BD21A07;password=BD21A07";
+	// private final String ip =
+	// "jdbc:sqlserver://10.1.20.15:1433;databaseName=BD21A07;user=BD21A07;password=BD21A07";
 	private static Conexion instance;
 	private Connection connection;
 
@@ -32,16 +41,67 @@ public class Conexion {
 			System.out.println(s.getMessage());
 		}
 
-		System.out.println(statement.toString());
-
-		// query de prueba que funcionó
-		//String query = "CREATE TABLE REGISTRATION " + "(id integer not null," + "first VARCHAR(255), " + "age integer, " + "primary key (id))";
-
+		// Todo una vez hechala conexión, llamar al setUp que crea las tablas e inserta valores
+				
 		try {
-			statement.executeQuery("");
+			BufferedReader br = new BufferedReader(
+					new FileReader(new File("C:\\Users\\nico\\Taller 3\\TP-Integrador\\setUp.sql")));
+			String query = br.readLine();
+
+			ResultSet result = null;
+
+			while (query != null) {
+
+				try {
+					statement.executeQuery(query);
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				} finally {
+					query = br.readLine();
+				}
+
+			}
+
+			// statement.executeQuery("insert into myDB.dbo.Cliente (DNI, Nombre,
+			// AutoPatente, Direccion, Provincia) values\r\n" +
+			// "(38616178, 'Nicolas', 'ABC-123', 'Roca 2815', 'Bs As')");
+
+			result = statement.executeQuery("select * from myDB.dbo.Cliente");
+			//
+			// ResultSetMetaData md = result.getMetaData();
+			// int columns = md.getColumnCount();
+			// String columnName;
+			//
+			// for (int i = 0; i < columns; i++) {
+			// columnName = md.getColumnName(i + 1);
+			// System.out.print(columnName+"\t");
+			// }
+
+			if (result != null) {
+				while (result.next()) {
+					System.out.println(result.getString("Nombre"));
+				}
+			}
+
+			/*
+			 * try { result = statement.executeQuery(query); } catch (SQLException e) {
+			 * System.out.println(e.getMessage()); }
+			 */
+
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// query de prueba que funcionó
+		// String query = "CREATE TABLE REGISTRATION " + "(id integer not null," +
+		// "first VARCHAR(255), " + "age integer, " + "primary key (id))";
 	}
 
 	public static Conexion getInstance() {
@@ -88,6 +148,10 @@ public class Conexion {
 			System.out.println(e.getMessage());
 		}
 		return connection;
+	}
+	
+	public void getClients() {
+		
 	}
 
 }
