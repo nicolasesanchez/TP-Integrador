@@ -41,7 +41,7 @@ public class Conexion {
 			System.out.println(s.getMessage());
 		}
 
-		// Todo una vez hechala conexión, llamar al setUp que crea las tablas e inserta valores
+		// Todo una vez hechala conexion, llamar al setUp que crea las tablas e inserta valores
 				
 		try {
 			BufferedReader br = new BufferedReader(
@@ -99,7 +99,7 @@ public class Conexion {
 			e.printStackTrace();
 		}
 
-		// query de prueba que funcionó
+		// query de prueba que funcionï¿½
 		// String query = "CREATE TABLE REGISTRATION " + "(id integer not null," +
 		// "first VARCHAR(255), " + "age integer, " + "primary key (id))";
 	}
