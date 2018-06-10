@@ -34,11 +34,11 @@ public class Conexion {
 
 		System.out.println(statement.toString());
 
-		String query = "CREATE TABLE REGISTRATION " + "(id integer not null," + "first VARCHAR(255), " + "age integer, "
-				+ "primary key (id))";
+		// query de prueba que funcionó
+		//String query = "CREATE TABLE REGISTRATION " + "(id integer not null," + "first VARCHAR(255), " + "age integer, " + "primary key (id))";
 
 		try {
-			statement.executeQuery(query);
+			statement.executeQuery("");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

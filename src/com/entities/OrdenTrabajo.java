@@ -19,7 +19,7 @@ public class OrdenTrabajo {
     private String modelo;
     private String descripcion;
 
-    public OrdenTrabajo(Cliente cliente, Empleado empleado, Vehiculo vehiculo) {
+    public OrdenTrabajo(Cliente cliente, Empleado empleado, Vehiculo vehiculo, String description) {
         id = Util.autoincrement(id);
         fechaInicio = Util.getCurrentTime();
         estado = Estado.PENDING;
@@ -28,7 +28,7 @@ public class OrdenTrabajo {
         patente = vehiculo.getPatente();
         marca = vehiculo.getMarca();
         modelo = vehiculo.getModelo();
-        descripcion = vehiculo.getDescripcion();
+        this.descripcion = description;
         horasTrabajadas = 0;
     }
 

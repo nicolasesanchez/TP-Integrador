@@ -23,7 +23,7 @@ public class Empleado {
         //Todo agregar input por consola
         Cliente c = new Cliente("Pepe", 38616178, null);
         Vehiculo v = new Vehiculo(c, "asd 123", "adasd", "sdadsa", "asdasd");
-        OrdenTrabajo od = new OrdenTrabajo(c, this, v);
+        OrdenTrabajo od = new OrdenTrabajo(c, this, v, "Soy una descripcion");
         taller.cargarOrdenTrabajo(od);
     }
 
