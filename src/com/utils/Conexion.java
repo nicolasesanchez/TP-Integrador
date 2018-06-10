@@ -16,7 +16,9 @@ public class Conexion {
 	// carguen los campos uno por uno??
 	// Todo conectar a la base correcta, la que esta seteada es la de Base de Datos,
 	// tiene los libros
+	// Todo esta 'ip' es para conectar local en sql windows
 	private final String ip = "jdbc:sqlserver://localhost:1433;databaseName=myDB;integratedSecurity=true";
+	//private final String ip = "jdbc:sqlserver://10.1.20.15:1433;databaseName=BD21A07;user=BD21A07;password=BD21A07";
 	private static Conexion instance;
 	private Connection connection;
 
