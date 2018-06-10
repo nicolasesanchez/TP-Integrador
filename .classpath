@@ -3,5 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mssql-jdbc-6.4.0.jre8"/>
+	<classpathentry kind="lib" path="C:/Users/nico/Downloads/Microsoft JDBC Driver 6.2 for SQL Server/sqljdbc_6.2/enu/mssql-jdbc-6.2.2.jre8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
