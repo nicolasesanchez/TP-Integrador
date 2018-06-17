@@ -48,6 +48,7 @@ public class Conexion {
 
 		try {
 
+			setTableAndValues();
 			// statement.executeQuery("insert into myDB.dbo.Cliente (DNI, Nombre,
 			// AutoPatente, Direccion, Provincia) values\r\n" +
 			// "(38616178, 'Nicolas', 'ABC-123', 'Roca 2815', 'Bs As')");
@@ -127,12 +128,19 @@ public class Conexion {
 
 	private void setTableAndValues() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File("../../TP-Integrador/setUp.sql")));
+			//BufferedReader br = new BufferedReader(new FileReader(new File("../../TP-Integrador/setUp.sql")));
+
+			Path local = Paths.get("").toAbsolutePath();
+			System.out.println(local.toAbsolutePath().toString());
+			Path sqlPath = Paths.get("/setUp.sql");
+			
+			String setUpRoute = local.toString() + sqlPath.toString();
+			System.out.println(setUpRoute);
+			
+			BufferedReader br = new BufferedReader(new FileReader(setUpRoute));
 			String query = br.readLine();
 
-			Path sqlPath = Paths.get("/setUp.sql");
-
-			String route = sqlPath.toAbsolutePath().toString();
+			//String route = sqlPath.toAbsolutePath().toString();
 
 			while (query != null) {
 
@@ -145,6 +153,8 @@ public class Conexion {
 				}
 
 			}
+			
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
