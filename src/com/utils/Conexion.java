@@ -122,25 +122,27 @@ public class Conexion {
 		return connection;
 	}
 	
-	public void updateOrder(OrdenTrabajo ot, int horas, AutoParte ap) {
+	public void updateOrder(OrdenTrabajo ot, AutoParte ap) throws SQLException {
+		statement.executeQuery(String.format("update myDB.dbo.OrdenTrabajo set CantidadHoras = %d, IDRepuestoUtilizado = %d where id = %d;", ot.getHorasTrabajadas(), ap.getId(), ot.getID()));
+	}
 
+	public void addClient(Cliente client) throws SQLException {
+		statement.executeQuery(String.format("insert into myDB.dbo.Cliente (DNI, Nombre, Direccion, Provincia) values (%d, '%s', '%s', '%s')", client.getDNI(), client.getNombre(), client.getDireccion().getDireccion(), client.getDireccion().getProvincia()));
+	}
+
+	public void updateClient(Cliente cliente) throws SQLException {
+		statement.executeQuery(String.format("update myDB.dbo.Cliente set DNI = %d, Nombre = '%s', Direccion = '%s', Provincia = '%s' where id = %d", cliente.getDNI(), cliente.getNombre(), cliente.getDireccion().getDireccion(), cliente.getDireccion().getProvincia(), cliente.getId()));
 	}
 
 	private void setTableAndValues() {
 		try {
-			//BufferedReader br = new BufferedReader(new FileReader(new File("../../TP-Integrador/setUp.sql")));
-
 			Path local = Paths.get("").toAbsolutePath();
-			System.out.println(local.toAbsolutePath().toString());
 			Path sqlPath = Paths.get("/setUp.sql");
 			
 			String setUpRoute = local.toString() + sqlPath.toString();
-			System.out.println(setUpRoute);
-			
+
 			BufferedReader br = new BufferedReader(new FileReader(setUpRoute));
 			String query = br.readLine();
-
-			//String route = sqlPath.toAbsolutePath().toString();
 
 			while (query != null) {
 

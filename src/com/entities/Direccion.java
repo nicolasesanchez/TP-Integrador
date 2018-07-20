@@ -1,18 +1,30 @@
 package com.entities;
 
 public class Direccion {
-	private int numero;
-	private String calle;
-	private String provincia;
-	
-	public Direccion(int numero, String calle, String provincia) {
-		this.numero = numero;
-		this.calle = calle;
-		this.provincia = provincia;
-	}
+    private String direccion;
+    private String provincia;
 
-	public String getProvincia() {
-		return this.provincia;
-	}
+    public Direccion(String direccion, String provincia) {
+        this.direccion = direccion;
+        this.provincia = provincia;
+    }
+
+    public String getProvincia() {
+        return this.provincia;
+    }
+
+    public String getDireccion() {
+        return this.direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        if (!direccion.equals("-"))
+            this.direccion = direccion;
+    }
+
+    public void setProvincia(String provincia) {
+        if (!provincia.equals("-"))
+            this.provincia = provincia;
+    }
 
 }

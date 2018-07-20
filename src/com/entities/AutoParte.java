@@ -3,16 +3,20 @@ package com.entities;
 import com.utils.Util;
 
 public class AutoParte {
-	private static int id = 0;
+	private static int genericId = 0;
+	private int id;
 	private String nombre;
 	private double precio;
-	// Todo is this necessary?
-	//private int stock;
-	
+
 	public AutoParte(String nombre, double precio) {
-		id = Util.autoincrement(id);
+		genericId = Util.autoincrement(id);
+		this.id = genericId;
 		this.nombre = nombre;
 		this.precio = precio;
+	}
+
+	public int getId() {
+		return id;
 	}
 	
 	public double getPrecio() {

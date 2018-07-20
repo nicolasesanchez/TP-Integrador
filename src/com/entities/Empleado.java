@@ -20,22 +20,20 @@ public class Empleado {
 
     public void crearOrdenTrabajo() {
         //Todo utilizar FACADE??
-        //Todo agregar input por consola
         Cliente c = new Cliente("Pepe", 38616178, null);
         Vehiculo v = new Vehiculo(c, "asd 123", "adasd", "sdadsa", "asdasd");
         OrdenTrabajo od = new OrdenTrabajo(c, this, v, "Soy una descripcion");
         taller.cargarOrdenTrabajo(od);
     }
 
-    //Todo no es modificar, sino agregar horas de trabajo (tal vez minutos para obtener hora y minuto) y autopartes utilizadas
     public void modificarOrdenTrabajo(OrdenTrabajo ot, int horas, AutoParte autoParte) throws OrdenTrabajoNotFoundException {
         taller.modificarOrden(ot, horas, autoParte);
     }
 
-    // Todo throws IllegalArgumentException
-    public void agregarCliente(Cliente cliente) {
-        // Todo agregar input por consola
-        taller.altaCliente(cliente);
+    public void agregarCliente(String name, int dni, String direccion, String provincia) {
+        Direccion dir = new Direccion(direccion, provincia);
+        Cliente client = new Cliente(name, dni, dir);
+        taller.altaCliente(client);
     }
 
     public void bajaCliente(Cliente cliente) {
@@ -43,7 +41,7 @@ public class Empleado {
         taller.bajaCliente(cliente);
     }
 
-    public void modificarCliente(Cliente cliente) throws ClientNotFoundException {
+    public void modificarCliente(Cliente cliente) {
         taller.modificarCliente(cliente);
     }
 }

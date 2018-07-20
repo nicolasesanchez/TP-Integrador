@@ -1,28 +1,22 @@
 package com.entities;
 
+import com.customExceptionClasses.ClientNotFoundException;
+import com.utils.Util;
 import com.utils.Validator;
-import com.views.DefaultMenu;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ControllerTaller {
-    private DefaultMenu menu;
+    private String[] options = {"Menú de clientes", "Menú de órdenes de trabajo", "Generar factura", "Generar historial de 'algo'"};
+    private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
     private static Scanner input;
     private static TallerMecanico taller;
+    private Empleado emp;
 
     public ControllerTaller() {
-        setUpViews();
-        setUpData();
-        input = new Scanner(System.in);
         taller = TallerMecanico.getInstance();
-    }
-
-    private void setUpViews() {
-        menu = new DefaultMenu();
-    }
-
-    private void setUpData() {
-
+        input = new Scanner(System.in);
     }
 
     public void init() {
@@ -40,26 +34,36 @@ public class ControllerTaller {
         } while (name == null);
 
         taller.setNombre(name);
+        Util.setUpCache();
     }
 
     public static void main(String[] args) {
         ControllerTaller controller = new ControllerTaller();
         controller.init();
-
-        int option = controller.showMenu();
-
-        controller.optionSelected(option);
-
-
+        controller.showMenu();
+        input.close();
     }
 
-    private int showMenu() {
-        menu.show(taller.getNombre());
-        int option = input.nextInt();
-        return option;
+    public void showMenu() {
+        System.out.printf("Bienvenido al taller: %s%n", taller.getNombre());
+        int option;
+        do {
+            showDefaultOptions();
+            option = input.nextInt();
+        } while (!Validator.isValidOption(option, 4));
+
+        this.redirectToSelectedView(option);
     }
 
-    private void optionSelected(int option) {
+    public void showDefaultOptions() {
+        System.out.println("Por favor seleccione un opción");
+        for (int i = 0; i < options.length; i++) {
+            System.out.printf("%d -> %s%n", (i + 1), options[i]);
+        }
+        System.out.println("-1 -> Finalizar");
+    }
+
+    public void redirectToSelectedView(int option) {
         switch (option) {
             case 1:
                 showClientMenu();
@@ -78,20 +82,147 @@ public class ControllerTaller {
         }
     }
 
-    private void showClientMenu() {
+    public void showClientMenu() {
+        ArrayList<Cliente> clientes = taller.getClientes();
+        //clientes.add(new Cliente("James Brown", 38728719, null));
+        //clientes.add(new Cliente("John Legend", 38428719, null));
+        String leftAlignFormat = "| %-3d | %-24s | %-9d |%n";
+
+        if (clientes.size() > 0) {
+            System.out.format("+-----+--------------------------+-----------+%n");
+            System.out.format("| ID  | Cliente                  | DNI       |%n");
+            System.out.format("+-----+--------------------------+-----------+%n");
+            for (Cliente client : clientes) {
+                System.out.format(leftAlignFormat, client.getId(), client.getNombre(), client.getDNI());
+            }
+            System.out.format("+-----+--------------------------+-----------+%n");
+        } else {
+            System.out.println("No se han ingresado clientes al sistema");
+        }
+
+        int option;
+        do {
+            showClientsOptions();
+            option = input.nextInt();
+            //Todo esto se 'come' el enter
+            input.nextLine();
+        } while (!Validator.isValidOption(option, 3));
+        redirectToClientOptions(option);
+    }
+
+    private void redirectToClientOptions(int option) {
+        switch (option) {
+            case -1:
+                showMenu();
+                break;
+            case 1:
+                addClientMenu();
+                break;
+            case 2:
+                modifyClientMenu();
+                break;
+            case 3:
+//                removeClientMenu();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void addClientMenu() {
+        String name = null;
+        int dni = 0;
+        String direccion = null;
+        String provincia = null;
+
+        name = obtainValue("nombre", name);
+        dni = obtainValue(dni);
+        direccion = obtainValue("direccion", direccion);
+        provincia = obtainValue("provincia", provincia);
+
+        emp = Util.getRandomEmployee();
+        emp.agregarCliente(name, dni, direccion, provincia);
+        showClientMenu();
+        showClientsOptions();
+    }
+
+    private void modifyClientMenu() {
+        int id;
+        Cliente client = null;
+        do {
+            System.out.println("Ingrese el ID del cliente que desea modificar:");
+            id = input.nextInt();
+
+            try {
+                client = taller.findClient(id);
+                String name = null;
+                int dni = 0;
+                String direccion = null;
+                String provincia = null;
+                if (client != null) {
+                    System.out.println("Ingrese los nuevos valores o '-1' si no desea editar el campo");
+                    name = obtainValue("nombre", name);
+                    dni = obtainValue(dni);
+                    direccion = obtainValue("direccion", direccion);
+                    provincia = obtainValue("provincia", provincia);
+                    client.setNombre(name);
+                    client.setDni(dni);
+                    client.getDireccion().setDireccion(direccion);
+                    client.getDireccion().setProvincia(provincia);
+                    emp.modificarCliente(client);
+                }
+            } catch (ClientNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (client == null);
 
     }
 
-    private void showOrderMenu() {
+    @SuppressWarnings("ParameterCanBeLocal")
+    private String obtainValue(String field, String value) {
+        do {
+            System.out.printf("Ingrese %s: ", field);
+            try {
+                value = Validator.validateValue(input.nextLine());
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                value = null;
+            }
+        } while (value == null);
+
+        return value;
+    }
+
+    @SuppressWarnings("ParameterCanBeLocal")
+    private int obtainValue(int value) {
+        do {
+            System.out.println("Ingrese DNI: ");
+            value = input.nextInt();
+            input.nextLine();
+        } while (value <= 0 || String.valueOf(value).length() != 8);
+
+        return value;
+    }
+
+    private void showClientsOptions() {
+        for (int i = 0; i < clientOptions.length; i++) {
+            System.out.printf("%d -> %s%n", (i + 1), clientOptions[i]);
+        }
+        System.out.println("-1 -> Cancelar");
+    }
+
+    public void showOrderMenu() {
 
     }
 
-    private void generateTicket() {
+    public void generateTicket() {
 
     }
 
-    private void generateFile() {
+    public void generateFile() {
 
     }
+
+    //private void showTable(String cArrayList list)
 
 }

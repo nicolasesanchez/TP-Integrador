@@ -57,4 +57,8 @@ public class Validator {
         return found;
     }
 
+    public static boolean isValidOption(int option, int max) {
+        return (option > 0 && option <= max) || option == -1;
+    }
+
 }

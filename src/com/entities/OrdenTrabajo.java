@@ -5,7 +5,8 @@ import com.utils.Util;
 import java.util.ArrayList;
 
 public class OrdenTrabajo {
-    private static int id = 0;
+    private static int genericId = 0;
+    private int id;
     private String fechaInicio;
     private String fechaFin;
     private Estado estado;
@@ -20,14 +21,15 @@ public class OrdenTrabajo {
     private String descripcion;
 
     public OrdenTrabajo(Cliente cliente, Empleado empleado, Vehiculo vehiculo, String description) {
-        id = Util.autoincrement(id);
+        genericId = Util.autoincrement(id);
+        this.id = genericId;
         fechaInicio = Util.getCurrentTime();
         estado = Estado.PENDING;
         this.cliente = cliente;
         this.empleado = empleado;
-        patente = vehiculo.getPatente();
+        /*patente = vehiculo.getPatente();
         marca = vehiculo.getMarca();
-        modelo = vehiculo.getModelo();
+        modelo = vehiculo.getModelo();*/
         this.descripcion = description;
         horasTrabajadas = 0;
     }
@@ -59,6 +61,10 @@ public class OrdenTrabajo {
         } else {
             throw new IllegalArgumentException("The value 'horas' cannot be lower than 1");
         }
+    }
+
+    public int getHorasTrabajadas() {
+        return this.horasTrabajadas;
     }
 
     public void setRepuestosUtilizados(AutoParte rep) {
