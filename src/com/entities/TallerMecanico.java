@@ -1,10 +1,9 @@
 package com.entities;
 
 import com.customExceptionClasses.*;
-import com.utils.Conexion;
+import com.utils.ConnectionManager;
 import com.utils.Validator;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TallerMecanico {
@@ -13,14 +12,14 @@ public class TallerMecanico {
     private ArrayList<Cliente> clientes;
     private ArrayList<OrdenTrabajo> ordenes;
     private static TallerMecanico instance;
-    private Conexion base;
+    private ConnectionManager base;
 
     public TallerMecanico() {
         empleados = new ArrayList<>();
         clientes = new ArrayList<>();
         ordenes = new ArrayList<>();
         //Todo descomentar cuando este todo listo (o sea, nunca .__.) !!
-        //base = Conexion.getInstance();
+        //base = ConnectionManager.getInstance();
     }
 
     public void setNombre(String name) {
@@ -60,11 +59,7 @@ public class TallerMecanico {
             modify.setHorasTrabajadas(horas);
             ot.setRepuestosUtilizados(rep);
             ot.setEstado(Estado.WIP);
-            try {
-                base.updateOrder(ot, rep);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            base.updateOrder(ot, rep);
         } else {
             throw new OrdenTrabajoNotFoundException(String.format("The order '%d' was not found in the data base", ot.getID()));
         }
@@ -84,11 +79,7 @@ public class TallerMecanico {
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {
         if (Validator.validateClient(cliente) != null) {
             clientes.add(cliente);
-            try {
-                base.addClient(cliente);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            base.addClient(cliente);
         }
     }
 
@@ -97,17 +88,13 @@ public class TallerMecanico {
         clientes.remove(cliente);
     }
 
-    public void modificarCliente(Cliente cliente) {
+    public void modificarCliente(Cliente cliente) throws ClientNotFoundException {
         int index = clientes.indexOf(cliente);
         if (index != -1) {
             clientes.set(index, cliente);
-            try {
-                base.updateClient(cliente);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        }
+            base.updateClient(cliente);
+        } else
+            throw new ClientNotFoundException(String.format("The client %d was not found in the data base", cliente.getDNI()));
     }
 
     public ArrayList<Empleado> getEmpleados() {
