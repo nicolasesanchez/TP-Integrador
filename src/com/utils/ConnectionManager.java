@@ -137,7 +137,7 @@ public class ConnectionManager {
 	private String getIp() {
 		String dataBaseConfigRoute = String.format("%s/connectionConfig.ini", local);
 		BufferedReader file = FilesHelper.getFileToRead(dataBaseConfigRoute);
-		Map dataMap = FilesHelper.getDataFromIniFile(file);
+		Map<String, String> dataMap = FilesHelper.getDataFromIniFile(file);
 		String ip = String.format("jdbc:%s:%s:%s;databaseName=%s;user=%s;password=%s", dataMap.get("driver"), dataMap.get("serverName"), dataMap.get("port"), dataMap.get("dataBaseName"), dataMap.get("userName"), dataMap.get("password"));
 
 		return ip;

@@ -30,7 +30,7 @@ public class FilesHelper {
         return br;
     }
 
-    public static Map getDataFromIniFile(BufferedReader br) {
+    public static Map<String, String> getDataFromIniFile(BufferedReader br) {
         Map<String, String> data = null;
         IniManager ini = new IniManager();
 
