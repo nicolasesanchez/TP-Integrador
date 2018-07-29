@@ -88,7 +88,7 @@ public class ControllerTaller {
         ResultSet rs = taller.getClientes();
         String leftAlignFormat = "| %-3d | %-24s | %-9d | %-24s | %-24s |%n";
 
-        if (rs != null) {
+        if (rs != null && taller.hasValues(rs)) {
             System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
             System.out.format("| ID  | Cliente                  | DNI       | Direccion                | Provincia                |%n");
             System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");

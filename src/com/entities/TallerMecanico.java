@@ -1,9 +1,9 @@
 package com.entities;
 
 import com.customExceptionClasses.*;
-import com.sun.security.ntlm.Client;
 import com.utils.ConnectionManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TallerMecanico {
@@ -118,6 +118,15 @@ public class TallerMecanico {
             }
         }
         return null;
+    }
+
+    public boolean hasValues(ResultSet rs) {
+        try {
+            rs.next();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
 }
