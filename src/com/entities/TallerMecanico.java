@@ -88,9 +88,10 @@ public class TallerMecanico {
     }
 
     public void bajaCliente(int id) throws ClientNotFoundException {
-        findClientByID(id);
-        clientes.remove(clientes.get(id - 1));
-        base.deleteClient(id);
+        if (findClientByID(id) != null) {
+            clientes.remove(clientes.get(id - 1));
+            base.deleteClient(id);
+        }
     }
 
     public void modificarCliente(Cliente cliente) {

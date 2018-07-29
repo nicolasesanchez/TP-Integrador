@@ -234,7 +234,7 @@ public class ControllerTaller {
             System.out.println("Ingrese DNI: ");
             value = input.nextInt();
             input.nextLine();
-        } while (!Validator.isValidDNI(value));
+        } while (value != -1 && !Validator.isValidDNI(value));
 
         return value;
     }

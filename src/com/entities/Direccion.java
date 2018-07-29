@@ -18,12 +18,12 @@ public class Direccion {
     }
 
     public void setDireccion(String direccion) {
-        if (!direccion.equals("-"))
+        if (!direccion.equals("-1"))
             this.direccion = direccion;
     }
 
     public void setProvincia(String provincia) {
-        if (!provincia.equals("-"))
+        if (!provincia.equals("-1"))
             this.provincia = provincia;
     }
 
