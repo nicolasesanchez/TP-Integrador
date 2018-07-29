@@ -120,13 +120,4 @@ public class TallerMecanico {
         return null;
     }
 
-    public boolean hasValues(ResultSet rs) {
-        try {
-            rs.next();
-            return true;
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
 }
