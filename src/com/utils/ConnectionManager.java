@@ -71,8 +71,8 @@ public class ConnectionManager {
 		executeQuery(String.format("update master.dbo.Cliente set DNI = %d, Nombre = '%s', Direccion = '%s', Provincia = '%s' where id = %d", cliente.getDNI(), cliente.getNombre(), cliente.getDireccion().getDireccion(), cliente.getDireccion().getProvincia(), cliente.getId()));
 	}
 
-	public void deleteClient(int dni) {
-		executeQuery(String.format("delete from master.dbo.Cliente where DNI = %d", dni));
+	public void deleteClient(int id) {
+		executeQuery(String.format("delete from master.dbo.Cliente where ID = %d", id));
 	}
 
 	public void addOrder(OrdenTrabajo ot) {

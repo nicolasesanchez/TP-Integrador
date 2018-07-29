@@ -162,6 +162,7 @@ public class ControllerTaller {
             try {
                 ResultSet rs = taller.findClientByID(id);
                 if (rs != null) {
+                    rs.next();
                     client = taller.getClientesCache().get(rs.getInt("ID") - 1);
                     String name = null;
                     int dni = 0;
@@ -190,25 +191,22 @@ public class ControllerTaller {
     }
 
     private void removeClientMenu() {
-        int dni;
+        int id;
         boolean ok;
         do {
-            do {
-                System.out.println("Ingrese el DNI del cliente que desea eliminar o -1 para volver:");
-                dni = input.nextInt();
+            System.out.println("Ingrese el ID del cliente que desea eliminar o -1 para volver:");
+            id = input.nextInt();
 
-            } while (dni != -1 && !Validator.isValidDNI(dni));
-
-            if (dni != -1) {
-                try {
-                    emp.bajaCliente(dni);
-                    ok = true;
-                } catch (ClientNotFoundException e) {
-                    System.out.println(e.getMessage());
-                    ok = false;
-                }
-            } else {
+            if (id == -1) {
                 break;
+            }
+
+            try {
+                emp.bajaCliente(id);
+                ok = true;
+            } catch (ClientNotFoundException e) {
+                System.out.println(e.getMessage());
+                ok = false;
             }
         } while (!ok);
 

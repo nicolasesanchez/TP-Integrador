@@ -87,13 +87,10 @@ public class TallerMecanico {
         base.addClient(cliente);
     }
 
-    public void bajaCliente(int dni) throws ClientNotFoundException {
-        Cliente cliente = findClienteByDNI(dni);
-        if (cliente != null) {
-            clientes.remove(cliente);
-            base.deleteClient(dni);
-        } else
-            ExceptionUtil.throwClientNotFoundException(String.format("The client with DNI [%d] was not found in the database", dni));
+    public void bajaCliente(int id) throws ClientNotFoundException {
+        findClientByID(id);
+        clientes.remove(clientes.get(id - 1));
+        base.deleteClient(id);
     }
 
     public void modificarCliente(Cliente cliente) {

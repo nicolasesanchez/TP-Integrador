@@ -40,8 +40,8 @@ public class Empleado {
         taller.altaCliente(client);
     }
 
-    public void bajaCliente(int dni) throws ClientNotFoundException {
-        taller.bajaCliente(dni);
+    public void bajaCliente(int id) throws ClientNotFoundException {
+        taller.bajaCliente(id);
     }
 
     public void modificarCliente(Cliente cliente) {
