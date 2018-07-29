@@ -88,10 +88,9 @@ public class TallerMecanico {
     }
 
     public void bajaCliente(int id) throws ClientNotFoundException {
-        if (findClientByID(id) != null) {
-            clientes.remove(clientes.get(id - 1));
-            base.deleteClient(id);
-        }
+        findClientByID(id);
+        clientes.remove(clientes.get(id - 1));
+        base.deleteClient(id);
     }
 
     public void modificarCliente(Cliente cliente) {
@@ -105,9 +104,11 @@ public class TallerMecanico {
 
     public ResultSet findClientByID(int id) throws ClientNotFoundException {
         resultSet = base.findClientByID(id);
-        if (resultSet == null) {
-            ExceptionUtil.throwClientNotFoundException(String.format("The client %d was not found in the database", id));
-        }
+        try {
+            if (!resultSet.isBeforeFirst()) {
+                ExceptionUtil.throwClientNotFoundException(String.format("The client %d was not found in the database", id));
+            }
+        } catch (SQLException e) {}
 
         return resultSet;
     }
