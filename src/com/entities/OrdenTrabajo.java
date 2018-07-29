@@ -27,8 +27,8 @@ public class OrdenTrabajo {
         estado = Estado.PENDING;
         this.cliente = cliente;
         this.empleado = empleado;
-        /*patente = vehiculo.getPatente();
-        marca = vehiculo.getMarca();
+        patente = vehiculo.getPatente();
+        /*marca = vehiculo.getMarca();
         modelo = vehiculo.getModelo();*/
         this.descripcion = description;
         horasTrabajadas = 0;
@@ -72,6 +72,22 @@ public class OrdenTrabajo {
             this.repuestosUtilizados = new ArrayList<>();
         }
         this.repuestosUtilizados.add(rep);
+    }
+
+    public String getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public String getPatente() {
+        return patente;
     }
 
 }

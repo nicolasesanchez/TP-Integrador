@@ -1,6 +1,5 @@
 package com.entities;
 
-import com.customExceptionClasses.ClientNotFoundException;
 import com.customExceptionClasses.OrdenTrabajoNotFoundException;
 
 public class Empleado {
@@ -16,6 +15,10 @@ public class Empleado {
 
     public String getNombre() {
         return this.nombre;
+    }
+
+    public int getDNI() {
+        return dni;
     }
 
     public void crearOrdenTrabajo() {

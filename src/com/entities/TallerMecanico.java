@@ -45,11 +45,10 @@ public class TallerMecanico {
         return instance;
     }
 
-    public void cargkarOrdenTrabajo(OrdenTrabajo ot) {//throws IllegalArgumentException {
-        //if (Validator.validateOrdenTrabajo(ot) != null) {
+    public void cargarOrdenTrabajo(OrdenTrabajo ot) {
         // Todo es necesario validar??
         ordenes.add(ot);
-        //}
+        base.addOrder(ot);
     }
 
     public void modificarOrden(OrdenTrabajo ot, int horas, AutoParte rep) throws OrdenTrabajoNotFoundException {
