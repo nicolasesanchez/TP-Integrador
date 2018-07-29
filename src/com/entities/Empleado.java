@@ -1,5 +1,6 @@
 package com.entities;
 
+import com.customExceptionClasses.ClientNotFoundException;
 import com.customExceptionClasses.OrdenTrabajoNotFoundException;
 
 public class Empleado {
@@ -24,7 +25,7 @@ public class Empleado {
     public void crearOrdenTrabajo() {
         //Todo utilizar FACADE??
         Cliente c = new Cliente("Pepe", 38616178, null);
-        Vehiculo v = new Vehiculo(c, "asd 123", "adasd", "sdadsa", "asdasd");
+        Vehiculo v = new Vehiculo(c, "asd 123", "adasd", "sdadsa");
         OrdenTrabajo od = new OrdenTrabajo(c, this, v, "Soy una descripcion");
         taller.cargarOrdenTrabajo(od);
     }
@@ -45,6 +46,10 @@ public class Empleado {
     }
 
     public void modificarCliente(Cliente cliente) {
-        taller.modificarCliente(cliente);
+        try {
+            taller.modificarCliente(cliente);
+        } catch (ClientNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

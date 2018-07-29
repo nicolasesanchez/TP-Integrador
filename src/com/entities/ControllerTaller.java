@@ -56,9 +56,9 @@ public class ControllerTaller {
     }
 
     public void showDefaultOptions() {
-        System.out.println("Por favor seleccione un opción");
+        System.out.println("Por favor seleccione una opción");
         for (int i = 0; i < options.length; i++) {
-            System.out.printf("%d -> %s%n", (i + 1), options[i]);
+            System.out.printf("%02d -> %s%n", (i + 1), options[i]);
         }
         System.out.println("-1 -> Finalizar");
     }
@@ -104,7 +104,7 @@ public class ControllerTaller {
         do {
             showClientsOptions();
             option = input.nextInt();
-            //Todo esto se 'come' el enter
+            // Esto se 'come' el enter
             input.nextLine();
         } while (!Validator.isValidOption(option, 3));
         redirectToClientOptions(option);
@@ -136,7 +136,7 @@ public class ControllerTaller {
         String provincia = null;
 
         name = obtainValue("nombre", name);
-        dni = obtainValue(dni);
+        dni = obtainDNIValue(dni);
         direccion = obtainValue("direccion", direccion);
         provincia = obtainValue("provincia", provincia);
 
@@ -154,7 +154,7 @@ public class ControllerTaller {
             id = input.nextInt();
 
             try {
-                client = taller.findClient(id);
+                client = taller.findClientByID(id);
                 String name = null;
                 int dni = 0;
                 String direccion = null;
@@ -162,7 +162,7 @@ public class ControllerTaller {
                 if (client != null) {
                     System.out.println("Ingrese los nuevos valores o '-1' si no desea editar el campo");
                     name = obtainValue("nombre", name);
-                    dni = obtainValue(dni);
+                    dni = obtainDNIValue(dni);
                     direccion = obtainValue("direccion", direccion);
                     provincia = obtainValue("provincia", provincia);
                     client.setNombre(name);
@@ -194,7 +194,7 @@ public class ControllerTaller {
     }
 
     @SuppressWarnings("ParameterCanBeLocal")
-    private int obtainValue(int value) {
+    private int obtainDNIValue(int value) {
         do {
             System.out.println("Ingrese DNI: ");
             value = input.nextInt();

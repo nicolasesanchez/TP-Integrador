@@ -5,7 +5,6 @@ import com.utils.Util;
 import java.util.ArrayList;
 
 public class Cliente {
-    // Todo usar ID en vez de DNI, porque puede ser duplicado
     private static int genericId = 0;
     private int id;
     private int dni;

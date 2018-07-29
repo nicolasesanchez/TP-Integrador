@@ -73,7 +73,7 @@ public class ConnectionManager {
 	}
 
 	public void addClient(Cliente client) {
-		executeQuery(String.format("insert into master.dbo.Cliente (DNI, Nombre, Direccion, Provincia) values (%d, '%s', '%s', '%s')", client.getDNI(), client.getNombre(), client.getDireccion().getDireccion(), client.getDireccion().getProvincia()));
+		executeQuery(String.format("insert into master.dbo.Cliente (ID, DNI, Nombre, Direccion, Provincia) values (%d, %d, '%s', '%s', '%s')", client.getId(), client.getDNI(), client.getNombre(), client.getDireccion().getDireccion(), client.getDireccion().getProvincia()));
 	}
 
 	public void updateClient(Cliente cliente) {
@@ -85,7 +85,7 @@ public class ConnectionManager {
 	}
 
 	public void addOrder(OrdenTrabajo ot) {
-		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (ID, FechaInicio, Estado, DNICliente, DNIEmpleado, PatenteVehiculo) values (%d, %s, %s, %d, %d, %s)", ot.getID(), ot.getFechaInicio(), ot.getEstado(), ot.getCliente().getDNI(), ot.getEmpleado().getDNI(), ot.getPatente()));
+		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (ID, FechaInicio, Estado, DNICliente, DNIEmpleado, PatenteVehiculo) values (%d, '%s', '%s', %d, %d, '%s')", ot.getID(), ot.getFechaInicio(), ot.getEstado(), ot.getCliente().getDNI(), ot.getEmpleado().getDNI(), ot.getPatente()));
 	}
 
 	public void updateOrder(OrdenTrabajo ot, AutoParte ap) {

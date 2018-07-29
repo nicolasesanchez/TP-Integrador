@@ -76,10 +76,8 @@ public class TallerMecanico {
     }*/
 
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {
-        if (Validator.validateClient(cliente) != null) {
-            clientes.add(cliente);
-            base.addClient(cliente);
-        }
+        clientes.add(cliente);
+        base.addClient(cliente);
     }
 
     public void bajaCliente(Cliente cliente) {
@@ -100,7 +98,7 @@ public class TallerMecanico {
         return this.empleados;
     }
 
-    public Cliente findClient(int id) throws ClientNotFoundException {
+    public Cliente findClientByID(int id) throws ClientNotFoundException {
         for (Cliente c : clientes) {
             if (id == c.getId()) {
                 return c;
