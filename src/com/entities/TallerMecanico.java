@@ -81,8 +81,8 @@ public class TallerMecanico {
     }
 
     public void bajaCliente(Cliente cliente) {
-        //Todo eliminarlo de la base de datos también
-        clientes.remove(cliente);
+    	clientes.remove(cliente);
+    	base.deleteClient(cliente);
     }
 
     public void modificarCliente(Cliente cliente) throws ClientNotFoundException {
