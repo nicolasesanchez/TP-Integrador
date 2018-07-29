@@ -19,7 +19,7 @@ public class TallerMecanico {
         clientes = new ArrayList<>();
         ordenes = new ArrayList<>();
         //Todo descomentar cuando este todo listo (o sea, nunca .__.) !!
-        //base = ConnectionManager.getInstance();
+        base = ConnectionManager.getInstance();
     }
 
     public void setNombre(String name) {

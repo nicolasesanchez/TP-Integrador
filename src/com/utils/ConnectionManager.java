@@ -22,23 +22,13 @@ public class ConnectionManager {
 		try {
 			statement = connection.createStatement();
 		} catch (SQLException s) {
-			System.out.println(s.getMessage());
+			//System.out.println(s.getMessage());
 		}
 
-		try {
-
+		if (!hasTables()) {
 			setTableAndValues();
-
-			result = statement.executeQuery("select * from master.dbo.Cliente");
-
-			if (result != null) {
-				while (result.next()) {
-					System.out.println(result.getString("Nombre"));
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
+
 	}
 
 	public static ConnectionManager getInstance() {
@@ -125,6 +115,27 @@ public class ConnectionManager {
 		} catch(SQLException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	public boolean hasTables() {
+		ResultSet rs = null;
+		try {
+			rs = statement.executeQuery("select Nombre from master.dbo.Empleado");
+		} catch (SQLException e) {
+		}
+		
+		return rs != null;
+	}
+	
+	public ResultSet getClientes() {
+		ResultSet rs = null;
+		try {
+			rs = statement.executeQuery("select * from master.dbo.Cliente");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return rs;
 	}
 
 }

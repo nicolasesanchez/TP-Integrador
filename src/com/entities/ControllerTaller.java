@@ -1,21 +1,26 @@
 package com.entities;
 
 import com.customExceptionClasses.ClientNotFoundException;
+import com.utils.ConnectionManager;
 import com.utils.Util;
 import com.utils.Validator;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ControllerTaller {
-    private String[] options = {"Menú de clientes", "Menú de órdenes de trabajo", "Generar factura", "Generar historial de 'algo'"};
+    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Generar factura", "Generar historial de 'algo'"};
     private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
     private static Scanner input;
     private static TallerMecanico taller;
     private Empleado emp;
+    private ConnectionManager conn;
 
     public ControllerTaller() {
         taller = TallerMecanico.getInstance();
+        conn = ConnectionManager.getInstance();
         input = new Scanner(System.in);
     }
 
@@ -56,7 +61,7 @@ public class ControllerTaller {
     }
 
     public void showDefaultOptions() {
-        System.out.println("Por favor seleccione una opción");
+        System.out.println("Por favor seleccione una opcion");
         for (int i = 0; i < options.length; i++) {
             System.out.printf("%02d -> %s%n", (i + 1), options[i]);
         }
@@ -84,18 +89,28 @@ public class ControllerTaller {
 
     public void showClientMenu() {
         ArrayList<Cliente> clientes = taller.getClientes();
+        ResultSet rs = conn.getClientes();
+        
         //clientes.add(new Cliente("James Brown", 38728719, null));
         //clientes.add(new Cliente("John Legend", 38428719, null));
-        String leftAlignFormat = "| %-3d | %-24s | %-9d |%n";
+        String leftAlignFormat = "| %-3d | %-24s | %-9d | %-24s | %-24s |%n";
 
-        if (clientes.size() > 0) {
-            System.out.format("+-----+--------------------------+-----------+%n");
-            System.out.format("| ID  | Cliente                  | DNI       |%n");
-            System.out.format("+-----+--------------------------+-----------+%n");
-            for (Cliente client : clientes) {
-                System.out.format(leftAlignFormat, client.getId(), client.getNombre(), client.getDNI());
+        if (rs != null) {
+            System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
+            System.out.format("| ID  | Cliente                  | DNI       | Direccion                | Provincia                |%n");
+            System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
+            /*for (Cliente client : clientes) {
+                System.out.format(leftAlignFormat, client.getId(), client.getNombre(), client.getDNI(), client.getDireccion().getDireccion(), client.getDireccion().getProvincia());
+            }*/
+            try {
+            	while (rs.next()) {
+            		System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("Nombre"), rs.getInt("DNI"), rs.getString("Direccion"), rs.getString("Provincia"));
+            	}
+            } catch (SQLException e) {
+            	
             }
-            System.out.format("+-----+--------------------------+-----------+%n");
+            
+            System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
         } else {
             System.out.println("No se han ingresado clientes al sistema");
         }
@@ -160,6 +175,7 @@ public class ControllerTaller {
                 String direccion = null;
                 String provincia = null;
                 if (client != null) {
+                	input.nextLine();
                     System.out.println("Ingrese los nuevos valores o '-1' si no desea editar el campo");
                     name = obtainValue("nombre", name);
                     dni = obtainDNIValue(dni);
@@ -206,9 +222,9 @@ public class ControllerTaller {
 
     private void showClientsOptions() {
         for (int i = 0; i < clientOptions.length; i++) {
-            System.out.printf("%d -> %s%n", (i + 1), clientOptions[i]);
+            System.out.printf("%02d -> %s%n", (i + 1), clientOptions[i]);
         }
-        System.out.println("-1 -> Cancelar");
+        System.out.println("-1 -> Volver a menu principal");
     }
 
     public void showOrderMenu() {
