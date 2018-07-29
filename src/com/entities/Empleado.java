@@ -40,16 +40,11 @@ public class Empleado {
         taller.altaCliente(client);
     }
 
-    public void bajaCliente(Cliente cliente) {
-        // Todo agregar input por consola?
-        taller.bajaCliente(cliente);
+    public void bajaCliente(int dni) throws ClientNotFoundException {
+        taller.bajaCliente(dni);
     }
 
     public void modificarCliente(Cliente cliente) {
-        try {
-            taller.modificarCliente(cliente);
-        } catch (ClientNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+        taller.modificarCliente(cliente);
     }
 }

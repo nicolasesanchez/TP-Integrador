@@ -1,9 +1,9 @@
 package com.entities;
 
 import com.customExceptionClasses.*;
+import com.sun.security.ntlm.Client;
 import com.utils.ConnectionManager;
-import com.utils.Validator;
-
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class TallerMecanico {
@@ -13,6 +13,7 @@ public class TallerMecanico {
     private ArrayList<OrdenTrabajo> ordenes;
     private static TallerMecanico instance;
     private ConnectionManager base;
+    private ResultSet resultSet = null;
 
     public TallerMecanico() {
         empleados = new ArrayList<>();
@@ -30,7 +31,11 @@ public class TallerMecanico {
         return nombre;
     }
 
-    public ArrayList<Cliente> getClientes() {
+    public ResultSet getClientes() {
+        return base.getClientes();
+    }
+
+    public ArrayList<Cliente> getClientesCache() {
         return clientes;
     }
 
@@ -46,22 +51,24 @@ public class TallerMecanico {
     }
 
     public void cargarOrdenTrabajo(OrdenTrabajo ot) {
-        // Todo es necesario validar??
         ordenes.add(ot);
         base.addOrder(ot);
     }
 
     public void modificarOrden(OrdenTrabajo ot, int horas, AutoParte rep) throws OrdenTrabajoNotFoundException {
-        int index = ordenes.indexOf(ot);
-        if (index != -1) {
+        resultSet = base.findOrderByID(ot.getID());
+
+        if (resultSet != null) {
+            int index = ordenes.indexOf(ot);
             OrdenTrabajo modify = ordenes.get(index);
             modify.setHorasTrabajadas(horas);
-            ot.setRepuestosUtilizados(rep);
-            ot.setEstado(Estado.WIP);
-            base.updateOrder(ot, rep);
+            modify.setRepuestosUtilizados(rep);
+            modify.setEstado(Estado.WIP);
+            base.updateOrder(modify, rep);
         } else {
             throw new OrdenTrabajoNotFoundException(String.format("The order '%d' was not found in the data base", ot.getID()));
         }
+
     }
 
     //Todo main (borrar)
@@ -80,31 +87,40 @@ public class TallerMecanico {
         base.addClient(cliente);
     }
 
-    public void bajaCliente(Cliente cliente) {
-    	clientes.remove(cliente);
-    	base.deleteClient(cliente);
+    public void bajaCliente(int dni) throws ClientNotFoundException {
+        Cliente cliente = findClienteByDNI(dni);
+        if (cliente != null) {
+            clientes.remove(cliente);
+            base.deleteClient(dni);
+        } else
+            ExceptionUtil.throwClientNotFoundException(String.format("The client with DNI [%d] was not found in the database", dni));
     }
 
-    public void modificarCliente(Cliente cliente) throws ClientNotFoundException {
-        int index = clientes.indexOf(cliente);
-        if (index != -1) {
-            clientes.set(index, cliente);
-            base.updateClient(cliente);
-        } else
-            throw new ClientNotFoundException(String.format("The client %d was not found in the data base", cliente.getDNI()));
+    public void modificarCliente(Cliente cliente) {
+        clientes.set(clientes.indexOf(cliente), cliente);
+        base.updateClient(cliente);
     }
 
     public ArrayList<Empleado> getEmpleados() {
         return this.empleados;
     }
 
-    public Cliente findClientByID(int id) throws ClientNotFoundException {
+    public ResultSet findClientByID(int id) throws ClientNotFoundException {
+        resultSet = base.findClientByID(id);
+        if (resultSet == null) {
+            ExceptionUtil.throwClientNotFoundException(String.format("The client %d was not found in the database", id));
+        }
+
+        return resultSet;
+    }
+
+    private Cliente findClienteByDNI(int dni) {
         for (Cliente c : clientes) {
-            if (id == c.getId()) {
+            if (c.getDNI() == dni) {
                 return c;
             }
         }
-        throw new ClientNotFoundException(String.format("The client '%d' does not exists in the data base", id));
+        return null;
     }
 
 }

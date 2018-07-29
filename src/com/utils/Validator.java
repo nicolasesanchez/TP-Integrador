@@ -44,7 +44,7 @@ public class Validator {
     }
 
     private static boolean validateDNI(int dni) {
-        ArrayList<Cliente> clientes = TallerMecanico.getInstance().getClientes();
+        ArrayList<Cliente> clientes = TallerMecanico.getInstance().getClientesCache();
         boolean found = false;
 
         for (Cliente cliente : clientes) {
@@ -59,6 +59,10 @@ public class Validator {
 
     public static boolean isValidOption(int option, int max) {
         return (option > 0 && option <= max) || option == -1;
+    }
+
+    public static boolean isValidDNI(int dni) {
+        return dni > 0 && String.valueOf(dni).length() == 8;
     }
 
 }

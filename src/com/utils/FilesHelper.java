@@ -30,22 +30,16 @@ public class FilesHelper {
         return br;
     }
 
-    public static Map<String, String> getDataFromIniFile(BufferedReader br) {
-        Map<String, String> data = null;
+    public static Map<String, String> getDataFromIniFile(BufferedReader br) throws IOException {
+        Map<String, String> data = new HashMap<>();
         IniManager ini = new IniManager();
 
-        try {
-            String line = br.readLine();
-            data = new HashMap<>();
-
-            while (line != null) {
-                if (ini.isValue(line)) {
-                    data.put(ini.getKey(line), ini.getValue(line));
-                }
-                line = br.readLine();
+        String line = br.readLine();
+        while (line != null) {
+            if (ini.isValue(line)) {
+                data.put(ini.getKey(line), ini.getValue(line));
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            line = br.readLine();
         }
 
         return data;

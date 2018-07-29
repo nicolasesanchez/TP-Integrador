@@ -1,7 +1,6 @@
 package com.entities;
 
 import com.customExceptionClasses.ClientNotFoundException;
-import com.utils.ConnectionManager;
 import com.utils.Util;
 import com.utils.Validator;
 
@@ -16,11 +15,9 @@ public class ControllerTaller {
     private static Scanner input;
     private static TallerMecanico taller;
     private Empleado emp;
-    private ConnectionManager conn;
 
     public ControllerTaller() {
         taller = TallerMecanico.getInstance();
-        conn = ConnectionManager.getInstance();
         input = new Scanner(System.in);
     }
 
@@ -88,28 +85,18 @@ public class ControllerTaller {
     }
 
     public void showClientMenu() {
-        ArrayList<Cliente> clientes = taller.getClientes();
-        ResultSet rs = conn.getClientes();
-        
-        //clientes.add(new Cliente("James Brown", 38728719, null));
-        //clientes.add(new Cliente("John Legend", 38428719, null));
+        ResultSet rs = taller.getClientes();
         String leftAlignFormat = "| %-3d | %-24s | %-9d | %-24s | %-24s |%n";
 
         if (rs != null) {
             System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
             System.out.format("| ID  | Cliente                  | DNI       | Direccion                | Provincia                |%n");
             System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
-            /*for (Cliente client : clientes) {
-                System.out.format(leftAlignFormat, client.getId(), client.getNombre(), client.getDNI(), client.getDireccion().getDireccion(), client.getDireccion().getProvincia());
-            }*/
             try {
             	while (rs.next()) {
             		System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("Nombre"), rs.getInt("DNI"), rs.getString("Direccion"), rs.getString("Provincia"));
             	}
-            } catch (SQLException e) {
-            	
-            }
-            
+            } catch (SQLException e) {}
             System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
         } else {
             System.out.println("No se han ingresado clientes al sistema");
@@ -137,7 +124,7 @@ public class ControllerTaller {
                 modifyClientMenu();
                 break;
             case 3:
-//                removeClientMenu();
+                removeClientMenu();
                 break;
             default:
                 break;
@@ -165,18 +152,23 @@ public class ControllerTaller {
         int id;
         Cliente client = null;
         do {
-            System.out.println("Ingrese el ID del cliente que desea modificar:");
+            System.out.println("Ingrese el ID del cliente que desea modificar o -1 para volver:");
             id = input.nextInt();
 
+            if (id == -1) {
+                break;
+            }
+
             try {
-                client = taller.findClientByID(id);
-                String name = null;
-                int dni = 0;
-                String direccion = null;
-                String provincia = null;
-                if (client != null) {
-                	input.nextLine();
-                    System.out.println("Ingrese los nuevos valores o '-1' si no desea editar el campo");
+                ResultSet rs = taller.findClientByID(id);
+                if (rs != null) {
+                    client = taller.getClientesCache().get(rs.getInt("ID") - 1);
+                    String name = null;
+                    int dni = 0;
+                    String direccion = null;
+                    String provincia = null;
+                    input.nextLine();
+                    System.out.println("Ingrese los nuevos valores o -1 si no desea editar el campo");
                     name = obtainValue("nombre", name);
                     dni = obtainDNIValue(dni);
                     direccion = obtainValue("direccion", direccion);
@@ -189,9 +181,38 @@ public class ControllerTaller {
                 }
             } catch (ClientNotFoundException e) {
                 System.out.println(e.getMessage());
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         } while (client == null);
 
+        showClientMenu();
+    }
+
+    private void removeClientMenu() {
+        int dni;
+        boolean ok;
+        do {
+            do {
+                System.out.println("Ingrese el DNI del cliente que desea eliminar o -1 para volver:");
+                dni = input.nextInt();
+
+            } while (dni != -1 && !Validator.isValidDNI(dni));
+
+            if (dni != -1) {
+                try {
+                    emp.bajaCliente(dni);
+                    ok = true;
+                } catch (ClientNotFoundException e) {
+                    System.out.println(e.getMessage());
+                    ok = false;
+                }
+            } else {
+                break;
+            }
+        } while (!ok);
+
+        showClientMenu();
     }
 
     @SuppressWarnings("ParameterCanBeLocal")
@@ -215,7 +236,7 @@ public class ControllerTaller {
             System.out.println("Ingrese DNI: ");
             value = input.nextInt();
             input.nextLine();
-        } while (value <= 0 || String.valueOf(value).length() != 8);
+        } while (!Validator.isValidDNI(value));
 
         return value;
     }
