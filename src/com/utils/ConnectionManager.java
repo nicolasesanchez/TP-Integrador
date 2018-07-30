@@ -12,7 +12,6 @@ public class ConnectionManager {
 	private static ConnectionManager instance;
 	private Connection connection;
 	private Statement statement;
-	private ResultSet result;
 	private final String local = FilesHelper.getLocalPath();
 	private ResultSet resultSet = null;
 
@@ -26,10 +25,7 @@ public class ConnectionManager {
 			//System.out.println(s.getMessage());
 		}
 
-		if (!hasTables()) {
-			setTableAndValues();
-		}
-
+		setTableAndValues();
 	}
 
 	public static ConnectionManager getInstance() {
@@ -119,10 +115,6 @@ public class ConnectionManager {
 		} catch(SQLException e) {}
 	}
 
-	public boolean hasTables() {
-		return executeQueryWithReturn("select Nombre from master.dbo.Empleado") != null;
-	}
-	
 	public ResultSet getClientes() {
 		return executeQueryWithReturn("select * from master.dbo.Cliente");
 	}
