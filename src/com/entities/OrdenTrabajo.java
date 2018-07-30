@@ -10,8 +10,8 @@ public class OrdenTrabajo {
     private String fechaInicio;
     private String fechaFin;
     private Estado estado;
-    private Cliente cliente;
-    private Empleado empleado;
+    private int DNICliente;
+    private int DNIempleado;
     private int horasTrabajadas;
     private ArrayList<AutoParte> repuestosUtilizados;
     // Datos obtenidos a partir del objeto vehículo
@@ -20,31 +20,22 @@ public class OrdenTrabajo {
     private String modelo;
     private String descripcion;
 
-    public OrdenTrabajo(Cliente cliente, Empleado empleado, Vehiculo vehiculo, String description) {
+    public OrdenTrabajo(int DNICliente, int DNIEmpleado, Vehiculo vehiculo, String description) {
         genericId = Util.autoincrement(id);
         this.id = genericId;
         fechaInicio = Util.getCurrentTime();
         estado = Estado.PENDING;
-        this.cliente = cliente;
-        this.empleado = empleado;
+        this.DNICliente = DNICliente;
+        this.DNIempleado = DNIEmpleado;
         patente = vehiculo.getPatente();
-        /*marca = vehiculo.getMarca();
-        modelo = vehiculo.getModelo();*/
+        marca = vehiculo.getMarca();
+        modelo = vehiculo.getModelo();
         this.descripcion = description;
         horasTrabajadas = 0;
     }
 
-    /*public static void main(String[] args) {
-        Cliente c = new Cliente(null, 23678456, null);
-        Vehiculo ve = new Vehiculo(c, Validator.validatePatente("asd 123"), "asd", "asd", "asdasdsa");
-        OrdenTrabajo od = new OrdenTrabajo(null, null, ve);
-
-        System.out.println(od.fechaInicio);
-
-    }*/
-
-    public Cliente getCliente() {
-        return cliente;
+    public int getDNICliente() {
+        return DNICliente;
     }
 
     public int getID() {
@@ -82,8 +73,8 @@ public class OrdenTrabajo {
         return estado;
     }
 
-    public Empleado getEmpleado() {
-        return empleado;
+    public int getDNIEmpleado() {
+        return DNIempleado;
     }
 
     public String getPatente() {

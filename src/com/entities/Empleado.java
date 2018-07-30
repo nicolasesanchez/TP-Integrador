@@ -4,7 +4,7 @@ import com.customExceptionClasses.ClientNotFoundException;
 import com.customExceptionClasses.OrdenTrabajoNotFoundException;
 
 public class Empleado {
-    private static int dni;
+    private int dni;
     private String nombre;
     private TallerMecanico taller;
 
@@ -22,11 +22,8 @@ public class Empleado {
         return dni;
     }
 
-    public void crearOrdenTrabajo() {
-        //Todo utilizar FACADE??
-        Cliente c = new Cliente("Pepe", 38616178, null);
-        Vehiculo v = new Vehiculo(c, "asd 123", "adasd", "sdadsa");
-        OrdenTrabajo od = new OrdenTrabajo(c, this, v, "Soy una descripcion");
+    public void crearOrdenTrabajo(int DNICliente, Vehiculo vehiculo, OrdenTrabajo orden) {
+        OrdenTrabajo orden = new OrdenTrabajo();
         taller.cargarOrdenTrabajo(od);
     }
 

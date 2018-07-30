@@ -6,12 +6,12 @@ import com.utils.Validator;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ControllerTaller {
     private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Generar factura", "Generar historial de 'algo'"};
     private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
+    private String[] orderOptions = {"Agregar orden", "Modificar orden", "Cerrar Orden"};
     private static Scanner input;
     private static TallerMecanico taller;
     private Empleado emp;
@@ -99,7 +99,7 @@ public class ControllerTaller {
             } catch (SQLException e) {}
             System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
         } else {
-            System.out.println("No se han ingresado clientes al sistema");
+            System.out.println("No se han encontrado clientes en el sistema");
         }
 
         int option;
@@ -110,6 +110,25 @@ public class ControllerTaller {
             input.nextLine();
         } while (!Validator.isValidOption(option, 3));
         redirectToClientOptions(option);
+    }
+
+    private void redirectToOrderOptions(int option) {
+        switch (option) {
+            case -1:
+                showMenu();
+                break;
+            case 1:
+                addOrderMenu();
+                break;
+            case 2:
+                modifyOrderMenu();
+                break;
+            case 3:
+                closeOrderMenu();
+                break;
+            default:
+                break;
+        }
     }
 
     private void redirectToClientOptions(int option) {
@@ -243,11 +262,48 @@ public class ControllerTaller {
         for (int i = 0; i < clientOptions.length; i++) {
             System.out.printf("%02d -> %s%n", (i + 1), clientOptions[i]);
         }
-        System.out.println("-1 -> Volver a menu principal");
+        System.out.println("-1 -> Volver al menu principal");
     }
 
-    public void showOrderMenu() {
+    private void showOrdersOptions() {
+        for (int i = 0; i < orderOptions.length; i++) {
+            System.out.printf("%02d -> %s%n", (i + 1), orderOptions[i]);
+        }
+        System.out.println("-1 -> Volver al menu principal");
+    }
 
+    private void showOrderMenu() {
+        ResultSet rs = taller.getOrdenes();
+        String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-7s | %-32s | %-15d | %-10d |%n";
+
+        if (taller.getOrdenesCache().size() > 0) {
+            System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
+            System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Patente | Descripcion                      | HorasTrabajadas | IDRepuesto |%n");
+            System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
+            try {
+                while (rs.next()) {
+                    System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("FechaInicio"), rs.getString("FechaFin"), rs.getString("Estado"), rs.getInt("DNICliente"), rs.getInt("DNIEmpleado"), rs.getString("Patente"), rs.getString("Descripcion"), rs.getInt("IDRepuestoUtilizado"));
+                }
+            } catch (SQLException e) {}
+            System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
+        } else {
+            System.out.println("No se han encontrado ordenes en el sistema");
+        }
+
+        int option;
+        do {
+            showOrdersOptions();
+            option = input.nextInt();
+            // Esto se 'come' el enter
+            input.nextLine();
+        } while (!Validator.isValidOption(option, 3));
+        redirectToOrderOptions(option);
+    }
+
+    private void addOrderMenu() {
+        emp = Util.getRandomEmployee();
+
+        emp.crearOrdenTrabajo();
     }
 
     public void generateTicket() {

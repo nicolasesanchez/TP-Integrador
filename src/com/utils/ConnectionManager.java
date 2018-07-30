@@ -44,7 +44,7 @@ public class ConnectionManager {
 		Cliente c = new Cliente("nico", 12312312, null);
 		Empleado e = new Empleado("val", 12312323);
 		Vehiculo v = new Vehiculo(c, "asd-123","","");
-		OrdenTrabajo ot = new OrdenTrabajo(c, e, v, "");
+		OrdenTrabajo ot = new OrdenTrabajo(c.getDNI(), e, v, "");
 		con.addOrder(ot);
 	}
 
@@ -76,7 +76,7 @@ public class ConnectionManager {
 	}
 
 	public void addOrder(OrdenTrabajo ot) {
-		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (ID, FechaInicio, Estado, DNICliente, DNIEmpleado, PatenteVehiculo) values (%d, '%s', '%s', %d, %d, '%s')", ot.getID(), ot.getFechaInicio(), ot.getEstado(), ot.getCliente().getDNI(), ot.getEmpleado().getDNI(), ot.getPatente()));
+		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (ID, FechaInicio, Estado, DNICliente, DNIEmpleado, PatenteVehiculo) values (%d, '%s', '%s', %d, %d, '%s')", ot.getID(), ot.getFechaInicio(), ot.getEstado(), ot.getDNICliente(), ot.getEmpleado().getDNI(), ot.getPatente()));
 	}
 
 	public void updateOrder(OrdenTrabajo ot, AutoParte ap) {
@@ -130,6 +130,10 @@ public class ConnectionManager {
 	
 	public ResultSet getClientes() {
 		return executeQueryWithReturn("select * from master.dbo.Cliente");
+	}
+
+	public ResultSet getOrdenes() {
+		return executeQueryWithReturn("select * from master.dbo.OrdenTrabajo");
 	}
 
 	public ResultSet findClientByID(int id) {

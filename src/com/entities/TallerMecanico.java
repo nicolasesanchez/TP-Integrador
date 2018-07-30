@@ -19,7 +19,6 @@ public class TallerMecanico {
         empleados = new ArrayList<>();
         clientes = new ArrayList<>();
         ordenes = new ArrayList<>();
-        //Todo descomentar cuando este todo listo (o sea, nunca .__.) !!
         base = ConnectionManager.getInstance();
     }
 
@@ -39,8 +38,12 @@ public class TallerMecanico {
         return clientes;
     }
 
-    public ArrayList<OrdenTrabajo> getOrdenes() {
+    public ArrayList<OrdenTrabajo> getOrdenesCache() {
         return ordenes;
+    }
+
+    public ResultSet getOrdenes() {
+        return base.getOrdenes();
     }
 
     public static TallerMecanico getInstance() {
@@ -58,29 +61,21 @@ public class TallerMecanico {
     public void modificarOrden(OrdenTrabajo ot, int horas, AutoParte rep) throws OrdenTrabajoNotFoundException {
         resultSet = base.findOrderByID(ot.getID());
 
-        if (resultSet != null) {
-            int index = ordenes.indexOf(ot);
-            OrdenTrabajo modify = ordenes.get(index);
-            modify.setHorasTrabajadas(horas);
-            modify.setRepuestosUtilizados(rep);
-            modify.setEstado(Estado.WIP);
-            base.updateOrder(modify, rep);
-        } else {
-            throw new OrdenTrabajoNotFoundException(String.format("The order '%d' was not found in the data base", ot.getID()));
-        }
-
-    }
-
-    //Todo main (borrar)
-    /*public static void main(String[] args) {
-        TallerMecanico t = TallerMecanico.getInstance();
         try {
-            OrdenTrabajo ot = new OrdenTrabajo(null, null, null, "");
-            t.cargarOrdenTrabajo(ot);
-            t.modificarOrden(ot, 2, null);
-            System.out.println(t.getOrdenes().get(0).getHorasTrabajadas());
-        } catch(OrdenTrabajoNotFoundException e){}
-    }*/
+            if (!resultSet.isBeforeFirst()) {
+                throw new OrdenTrabajoNotFoundException(String.format("The order '%d' was not found in the data base", ot.getID()));
+            } else {
+                int index = ordenes.indexOf(ot);
+                OrdenTrabajo modify = ordenes.get(index);
+                modify.setHorasTrabajadas(horas);
+                modify.setRepuestosUtilizados(rep);
+                if (modify.getEstado().equals("PENDING")) {
+                    modify.setEstado(Estado.WIP);
+                }
+                base.updateOrder(modify, rep);
+            }
+        } catch (SQLException e) {}
+    }
 
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {
         clientes.add(cliente);
@@ -112,14 +107,4 @@ public class TallerMecanico {
 
         return resultSet;
     }
-
-    private Cliente findClienteByDNI(int dni) {
-        for (Cliente c : clientes) {
-            if (c.getDNI() == dni) {
-                return c;
-            }
-        }
-        return null;
-    }
-
 }
