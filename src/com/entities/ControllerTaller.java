@@ -261,19 +261,19 @@ public class ControllerTaller {
         ResultSet rs = taller.getOrdenes();
         String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-7s | %-32s | %-15d | %-10d |%n";
 
-        if (taller.getOrdenesCache().size() > 0) {
-            System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
-            System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Patente | Descripcion                      | HorasTrabajadas | IDRepuesto |%n");
-            System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
-            try {
+        try {
+            if (rs.isBeforeFirst()) {
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
+                System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Patente | Descripcion                      | HorasTrabajadas | IDRepuesto |%n");
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
                 while (rs.next()) {
                     System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("FechaInicio"), rs.getString("FechaFin"), rs.getString("Estado"), rs.getInt("DNICliente"), rs.getInt("DNIEmpleado"), rs.getString("Patente"), rs.getString("Descripcion"), rs.getInt("IDRepuestoUtilizado"));
                 }
-            } catch (SQLException e) {}
-            System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
-        } else {
-            System.out.println("No se han encontrado ordenes en el sistema");
-        }
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
+            } else {
+                System.out.println("No se han encontrado ordenes en el sistema");
+            }
+        } catch (SQLException e) {}
 
         int option;
         do {
@@ -286,6 +286,7 @@ public class ControllerTaller {
     }
 
     private void addOrderMenu() {
+        ResultSet rs = null;
         int clientID;
         String marca = null;
         String modelo = null;
@@ -295,12 +296,13 @@ public class ControllerTaller {
         emp = Util.getRandomEmployee();
 
         taller.showClientsList();
-
-        System.out.println("Seleccione un ID de cliente");
-        clientID = input.nextInt();
-
+        
         try {
-            taller.findClientByID(clientID);
+            do {
+                System.out.println("Seleccione un ID de cliente");
+                clientID = input.nextInt();
+                rs = taller.findClientByID(clientID);
+            } while (!rs.isBeforeFirst());
 
             input.nextLine();
             System.out.println("Ingrese los datos del vehiculo");
@@ -318,7 +320,7 @@ public class ControllerTaller {
             emp.crearOrdenTrabajo(clientID, vehiculo, description);
         } catch (ClientNotFoundException e) {
             System.out.println(e.getMessage());
-        }
+        } catch (SQLException e) {}
     }
 
     public void generateTicket() {
@@ -328,7 +330,4 @@ public class ControllerTaller {
     public void generateFile() {
 
     }
-
-    //private void showTable(String cArrayList list)
-
 }

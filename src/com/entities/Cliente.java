@@ -2,8 +2,6 @@ package com.entities;
 
 import com.utils.Util;
 
-import java.util.ArrayList;
-
 public class Cliente {
     private static int genericId = 0;
     private int id;

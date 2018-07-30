@@ -117,7 +117,7 @@ public class TallerMecanico {
         String leftAlignFormat = "| %-3d | %-24s | %-9d | %-24s | %-24s |%n";
 
         try {
-            if (!resultSet.isBeforeFirst()) {
+            if (resultSet.isBeforeFirst()) {
                 System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
                 System.out.format("| ID  | Cliente                  | DNI       | Direccion                | Provincia                |%n");
                 System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
