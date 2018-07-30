@@ -286,41 +286,42 @@ public class ControllerTaller {
     }
 
     private void addOrderMenu() {
-        ResultSet rs = null;
-        int clientID;
+        int clientID = 0;
         String marca = null;
         String modelo = null;
         String patente;
         String description = null;
+        boolean ok;
 
         emp = Util.getRandomEmployee();
-
         taller.showClientsList();
-        
-        try {
-            do {
-                System.out.println("Seleccione un ID de cliente");
+
+        do {
+            try {
+                System.out.print("Seleccione un ID de cliente: ");
                 clientID = input.nextInt();
-                rs = taller.findClientByID(clientID);
-            } while (!rs.isBeforeFirst());
+                taller.findClientByID(clientID);
+                ok = true;
+            } catch (ClientNotFoundException e) {
+                System.out.println(e.getMessage());
+                ok = false;
+            }
+        } while (!ok);
 
-            input.nextLine();
-            System.out.println("Ingrese los datos del vehiculo");
-            marca = obtainValue("marca", marca);
-            modelo = obtainValue("modelo", modelo);
-            do {
-                System.out.print("Ingrese patente: ");
-                patente = input.nextLine();
-            } while (Validator.validatePatente(patente) != null);
+        input.nextLine();
+        System.out.println("Ingrese los datos del vehiculo");
+        marca = obtainValue("marca", marca);
+        modelo = obtainValue("modelo", modelo);
+        do {
+            System.out.print("Ingrese patente: ");
+            patente = input.nextLine();
+        } while (Validator.validatePatente(patente) != null);
 
-            Vehiculo vehiculo = new Vehiculo(clientID, patente, marca, modelo);
+        Vehiculo vehiculo = new Vehiculo(clientID, patente, marca, modelo);
 
-            description = obtainValue("descripcion", description);
+        description = obtainValue("descripcion", description);
 
-            emp.crearOrdenTrabajo(clientID, vehiculo, description);
-        } catch (ClientNotFoundException e) {
-            System.out.println(e.getMessage());
-        } catch (SQLException e) {}
+        emp.crearOrdenTrabajo(clientID, vehiculo, description);
     }
 
     public void generateTicket() {
