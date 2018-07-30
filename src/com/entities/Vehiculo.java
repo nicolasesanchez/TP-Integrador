@@ -1,16 +1,16 @@
 package com.entities;
 
 public class Vehiculo {
-	private Cliente cliente;
+	private int DNICliente;
 	private String patente;
 	private String marca;
 	private String modelo;
 
-	public Vehiculo(Cliente cliente, String patente, String marca, String modelo) {
+	public Vehiculo(int DNICliente, String patente, String marca, String modelo) {
 		this.patente = patente;
 		this.marca = marca;
 		this.modelo = modelo;
-		this.cliente = cliente;
+		this.DNICliente = DNICliente;
 		addVehiculo(this);
 	}
 
@@ -27,7 +27,7 @@ public class Vehiculo {
 	}
 
 	private void addVehiculo(Vehiculo vehiculo) {
-		cliente.getVehiculos().add(vehiculo);
+		TallerMecanico.getClientByID(DNICliente).setVehiculo(vehiculo);
 	}
 
 }

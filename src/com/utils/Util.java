@@ -42,19 +42,4 @@ public class Util {
         TallerMecanico.getInstance().getEmpleados().add(new Empleado("Blippi", 3871568));
     }
 
-    //Todo borrar
-    /*public static void main(String[] args) {
-        ArrayList<String> asd = new ArrayList<>();
-        asd.add("cero");
-        asd.add("uno");
-        asd.add("dos");
-        asd.add("tres");
-        asd.add("cuatro");
-
-        while (true) {
-            int random = (int) (Math.random() * asd.size()) + 1;
-            System.out.println(asd.get(random - 1) + " --> " + (random - 1));
-        }
-    }*/
-
 }

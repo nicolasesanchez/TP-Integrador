@@ -28,7 +28,7 @@ public class ControllerTaller {
             System.out.print("Ingrese el nombre del taller: ");
             name = input.nextLine();
             try {
-                name = Validator.validateValue(name);
+                name = Validator.isValidValue(name);
             } catch (IllegalArgumentException e) {
                 System.err.println(e.getMessage());
                 name = null;
@@ -85,22 +85,7 @@ public class ControllerTaller {
     }
 
     public void showClientMenu() {
-        ResultSet rs = taller.getClientes();
-        String leftAlignFormat = "| %-3d | %-24s | %-9d | %-24s | %-24s |%n";
-
-        if (taller.getClientesCache().size() > 0) {
-            System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
-            System.out.format("| ID  | Cliente                  | DNI       | Direccion                | Provincia                |%n");
-            System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
-            try {
-            	while (rs.next()) {
-            		System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("Nombre"), rs.getInt("DNI"), rs.getString("Direccion"), rs.getString("Provincia"));
-            	}
-            } catch (SQLException e) {}
-            System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
-        } else {
-            System.out.println("No se han encontrado clientes en el sistema");
-        }
+        taller.showClientsList();
 
         int option;
         do {
@@ -121,10 +106,10 @@ public class ControllerTaller {
                 addOrderMenu();
                 break;
             case 2:
-                modifyOrderMenu();
+                //modifyOrderMenu();
                 break;
             case 3:
-                closeOrderMenu();
+                //closeOrderMenu();
                 break;
             default:
                 break;
@@ -237,7 +222,7 @@ public class ControllerTaller {
         do {
             System.out.printf("Ingrese %s: ", field);
             try {
-                value = Validator.validateValue(input.nextLine());
+                value = Validator.isValidValue(input.nextLine());
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
                 value = null;
@@ -301,9 +286,39 @@ public class ControllerTaller {
     }
 
     private void addOrderMenu() {
+        int clientID;
+        String marca = null;
+        String modelo = null;
+        String patente;
+        String description = null;
+
         emp = Util.getRandomEmployee();
 
-        emp.crearOrdenTrabajo();
+        taller.showClientsList();
+
+        System.out.println("Seleccione un ID de cliente");
+        clientID = input.nextInt();
+
+        try {
+            taller.findClientByID(clientID);
+
+            input.nextLine();
+            System.out.println("Ingrese los datos del vehiculo");
+            marca = obtainValue("marca", marca);
+            modelo = obtainValue("modelo", modelo);
+            do {
+                System.out.print("Ingrese patente: ");
+                patente = input.nextLine();
+            } while (Validator.validatePatente(patente) != null);
+
+            Vehiculo vehiculo = new Vehiculo(clientID, patente, marca, modelo);
+
+            description = obtainValue("descripcion", description);
+
+            emp.crearOrdenTrabajo(clientID, vehiculo, description);
+        } catch (ClientNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void generateTicket() {

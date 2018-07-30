@@ -22,9 +22,9 @@ public class Empleado {
         return dni;
     }
 
-    public void crearOrdenTrabajo(int DNICliente, Vehiculo vehiculo, OrdenTrabajo orden) {
-        OrdenTrabajo orden = new OrdenTrabajo();
-        taller.cargarOrdenTrabajo(od);
+    public void crearOrdenTrabajo(int DNICliente, Vehiculo vehiculo, String description) {
+        OrdenTrabajo orden = new OrdenTrabajo(DNICliente, this.getDNI(), vehiculo, description);
+        taller.cargarOrdenTrabajo(orden);
     }
 
     public void modificarOrdenTrabajo(OrdenTrabajo ot, int horas, AutoParte autoParte) throws OrdenTrabajoNotFoundException {

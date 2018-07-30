@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class TallerMecanico {
     private String nombre;
     private ArrayList<Empleado> empleados;
-    private ArrayList<Cliente> clientes;
+    private static ArrayList<Cliente> clientes;
     private ArrayList<OrdenTrabajo> ordenes;
     private static TallerMecanico instance;
     private ConnectionManager base;
@@ -106,5 +106,31 @@ public class TallerMecanico {
         } catch (SQLException e) {}
 
         return resultSet;
+    }
+
+    public static Cliente getClientByID(int id) {
+        return clientes.get(id - 1);
+    }
+
+    public void showClientsList() {
+        resultSet = getClientes();
+        String leftAlignFormat = "| %-3d | %-24s | %-9d | %-24s | %-24s |%n";
+
+        try {
+            if (!resultSet.isBeforeFirst()) {
+                System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
+                System.out.format("| ID  | Cliente                  | DNI       | Direccion                | Provincia                |%n");
+                System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
+                    while (resultSet.next()) {
+                        System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("Nombre"), resultSet.getInt("DNI"), resultSet.getString("Direccion"), resultSet.getString("Provincia"));
+                    }
+
+                System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
+            } else {
+                System.out.println("No se han encontrado clientes en el sistema");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -10,7 +10,7 @@ public class Cliente {
     private int dni;
     private String nombre;
     private Direccion direccion;
-    private ArrayList<Vehiculo> vehiculos;
+    private Vehiculo vehiculo;
 
     public Cliente(String nombre, int dni, Direccion direccion) {
         genericId = Util.autoincrement(genericId);
@@ -18,7 +18,6 @@ public class Cliente {
         this.dni = dni;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.vehiculos = new ArrayList<>();
     }
 
     public int getId() {
@@ -37,8 +36,8 @@ public class Cliente {
         return direccion;
     }
 
-    public ArrayList<Vehiculo> getVehiculos() {
-        return vehiculos;
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 
     public void setNombre(String name) {
