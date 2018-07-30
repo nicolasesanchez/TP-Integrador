@@ -289,7 +289,7 @@ public class ControllerTaller {
         int clientID = 0;
         String marca = null;
         String modelo = null;
-        String patente;
+        String patente = null;
         String description = null;
         boolean ok;
 
@@ -312,14 +312,10 @@ public class ControllerTaller {
         System.out.println("Ingrese los datos del vehiculo");
         marca = obtainValue("marca", marca);
         modelo = obtainValue("modelo", modelo);
-        do {
-            System.out.print("Ingrese patente: ");
-            patente = input.nextLine();
-        } while (Validator.validatePatente(patente) != null);
+        patente = obtainValue("patente", patente);
+        description = obtainValue("descripcion", description);
 
         Vehiculo vehiculo = new Vehiculo(clientID, patente, marca, modelo);
-
-        description = obtainValue("descripcion", description);
 
         emp.crearOrdenTrabajo(clientID, vehiculo, description);
     }
