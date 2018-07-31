@@ -71,11 +71,9 @@ public class ConnectionManager {
 				"values (%d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s')", ot.getID(), ot.getFechaInicio(), ot.getEstado(), ot.getDNICliente(), ot.getDNIEmpleado(), ot.getMarca(), ot.getModelo(), ot.getPatente(), ot.getDescripcion()));
 	}
 
-	// TODO insert new row in table OrdenTrabajoRepuesto with hours, reps, order id and rep id
-	public void updateOrder(OrdenTrabajo ot, Repuesto ap) {
-		if (ot.getEstado().equals("WIP")) // what?
-		executeQuery(String.format("update master.dbo.OrdenTrabajo set Estado = %s where id = %d;", ot.getEstado(), ot.getID()));
-		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (CantidadHoras, IDRepuestoUtilizado) values (%d, %d", ot.getHorasTrabajadas(), ap.getId()));
+	public void updateOrder(int orderId, int repID, int horas, int cantRep) {
+		executeQuery(String.format("update master.dbo.OrdenTrabajo set Estado = '%s' where ID = %d", Estado.WIP, orderId));
+		executeQuery(String.format("insert into master.dbo.OrdenTrabajoRepuesto (OrdenID, RepuestoID, CantidadHoras, CantidadRepuestos) values (%d, %d, %d, %d)", orderId, repID, horas, cantRep));
 	}
 
 	private void setTableAndValues() {
@@ -125,12 +123,20 @@ public class ConnectionManager {
 		return executeQueryWithReturn("select * from master.dbo.OrdenTrabajo");
 	}
 
+	public ResultSet getRepuestos() {
+		return executeQueryWithReturn("select * from master.dbo.Repuesto");
+	}
+
 	public ResultSet findClientByID(int id) {
 		return executeQueryWithReturn(String.format("select * from master.dbo.Cliente where ID = %d", id));
 	}
 
 	public ResultSet findOrderByID(int id) {
 		return executeQueryWithReturn(String.format("select * from master.dbo.OrdenTrabajo where ID = %d", id));
+	}
+
+	public ResultSet findRepuestoByID(int id) {
+		return executeQueryWithReturn(String.format("select * from master.dbo.Repuesto where ID = %d", id));
 	}
 
 	private ResultSet executeQueryWithReturn(String query) {

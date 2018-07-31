@@ -1,7 +1,7 @@
 package com.customExceptionClasses;
 
-public class ClientNotFoundException extends CustomException {
-    public ClientNotFoundException(String message) {
+public class RepuestoNotFoundException extends CustomException {
+    public RepuestoNotFoundException(String message) {
         super(message);
     }
 

@@ -1,6 +1,6 @@
 package com.entities;
 
-import com.customExceptionClasses.ClientNotFoundException;
+import com.customExceptionClasses.CustomException;
 import com.utils.Util;
 import com.utils.Validator;
 
@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ControllerTaller {
     private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Generar factura", "Generar historial de 'algo'"};
     private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
-    private String[] orderOptions = {"Agregar orden", "Modificar orden", "Cerrar Orden"};
+    private String[] orderOptions = {"Agregar orden", "Agregar trabajo realizado a orden", "Cerrar Orden"};
     private static Scanner input;
     private static TallerMecanico taller;
     private Empleado emp;
@@ -71,7 +71,7 @@ public class ControllerTaller {
                 showClientMenu();
                 break;
             case 2:
-                showOrderMenu();
+                showOrdersMenu();
                 break;
             case 3:
                 generateTicket();
@@ -106,9 +106,10 @@ public class ControllerTaller {
                 addOrderMenu();
                 break;
             case 2:
-                //modifyOrderMenu();
+                modifyOrderMenu();
                 break;
             case 3:
+                // TODO cerrar orden y sumar totales
                 //closeOrderMenu();
                 break;
             default:
@@ -180,7 +181,7 @@ public class ControllerTaller {
                     emp.modificarCliente(rs.getInt("ID"), name, dni, direccion, provincia);
                     ok = true;
                 }
-            } catch (ClientNotFoundException e) {
+            } catch (CustomException e) {
                 System.out.println(e.getMessage());
                 ok = false;
             } catch (SQLException e) {
@@ -205,7 +206,7 @@ public class ControllerTaller {
             try {
                 emp.bajaCliente(id);
                 ok = true;
-            } catch (ClientNotFoundException e) {
+            } catch (CustomException e) {
                 System.out.println(e.getMessage());
                 ok = false;
             }
@@ -240,6 +241,15 @@ public class ControllerTaller {
         return value;
     }
 
+    private int obtainValue(String field, int value) {
+        do {
+            System.out.printf("Ingerese %s: ", field);
+            value = input.nextInt();
+        } while(value <= 0);
+
+        return value;
+    }
+
     private void showClientsOptions() {
         for (int i = 0; i < clientOptions.length; i++) {
             System.out.printf("%02d -> %s%n", (i + 1), clientOptions[i]);
@@ -254,7 +264,7 @@ public class ControllerTaller {
         System.out.println("-1 -> Volver al menu principal");
     }
 
-    private void showOrderMenu() {
+    private void showOrdersMenu() {
         ResultSet rs = taller.getOrdenes();
         String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-13s | %-13s | %-9s | %-32s |%n";
 
@@ -302,7 +312,7 @@ public class ControllerTaller {
                 clientID = input.nextInt();
                 taller.findClientByID(clientID);
                 ok = true;
-            } catch (ClientNotFoundException e) {
+            } catch (CustomException e) {
                 System.out.println(e.getMessage());
                 ok = false;
             }
@@ -316,7 +326,66 @@ public class ControllerTaller {
         description = obtainValue("descripcion", description);
 
         emp.crearOrdenTrabajo(clientID, marca, modelo, patente, description);
-        showOrdersOptions();
+        showOrdersMenu();
+    }
+
+    private void modifyOrderMenu() {
+        int orderID;
+        int repuestoID;
+        int horas = 0;
+        int cantRepuesto = 0;
+        boolean found;
+        boolean ok = false;
+        emp = Util.getRandomEmployee();
+        do {
+            System.out.println("Ingrese el ID del orden a la que desea agregarle trabajo realizado o -1 para cancelar: ");
+            orderID = input.nextInt();
+
+            if (orderID == -1) {
+                break;
+            }
+
+            try {
+                ResultSet rs = taller.findOrderByID(orderID);
+                ResultSet rsRep = null;
+                if (rs != null) {
+                    rs.next();
+                    taller.showRepuestosList();
+                    do {
+                        System.out.println("Ingrese el ID del repuesto que desea agregar o -1 para cancelar: ");
+                        repuestoID = input.nextInt();
+
+                        if (repuestoID ==  -1) {
+                            break;
+                        }
+
+                        try {
+                            rsRep = taller.findRepuestoByID(repuestoID);
+                            found = true;
+                        } catch (CustomException e) {
+                            System.out.println(e.getMessage());
+                            found = false;
+                        }
+                    } while (!found);
+
+                    if (rsRep != null) {
+                        cantRepuesto = obtainValue("cantidad de repuestos", cantRepuesto);
+                        horas = obtainValue("cantidad de horas", horas);
+                        emp.modificarOrdenTrabajo(rs.getInt("ID"), rsRep.getInt("ID"), horas, cantRepuesto);
+                    }
+
+                    ok = true;
+                }
+            } catch (CustomException e) {
+                System.out.println(e.getMessage());
+                ok = false;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } while(!ok);
+
+        showOrdersMenu();
     }
 
     public void generateTicket() {

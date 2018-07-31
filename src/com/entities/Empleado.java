@@ -1,7 +1,6 @@
 package com.entities;
 
-import com.customExceptionClasses.ClientNotFoundException;
-import com.customExceptionClasses.OrdenTrabajoNotFoundException;
+import com.customExceptionClasses.CustomException;
 
 public class Empleado {
     private int dni;
@@ -27,8 +26,8 @@ public class Empleado {
         taller.cargarOrdenTrabajo(orden);
     }
 
-    public void modificarOrdenTrabajo(OrdenTrabajo ot, int horas, Repuesto repuesto) throws OrdenTrabajoNotFoundException {
-        taller.modificarOrden(ot, horas, repuesto);
+    public void modificarOrdenTrabajo(int ordenID, int repID, int horas, int cantRep) {
+        taller.modificarOrden(ordenID, repID, horas, cantRep);
     }
 
     public void agregarCliente(String name, int dni, String direccion, String provincia) {
@@ -37,7 +36,7 @@ public class Empleado {
         taller.altaCliente(client);
     }
 
-    public void bajaCliente(int id) throws ClientNotFoundException {
+    public void bajaCliente(int id) throws CustomException {
         taller.bajaCliente(id);
     }
 

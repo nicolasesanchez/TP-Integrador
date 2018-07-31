@@ -1,6 +1,6 @@
 package com.customExceptionClasses;
 
-public class OrdenTrabajoNotFoundException extends Exception {
+public class OrdenTrabajoNotFoundException extends CustomException {
     public OrdenTrabajoNotFoundException(String message) {
         super(message);
     }
@@ -9,5 +9,4 @@ public class OrdenTrabajoNotFoundException extends Exception {
     public String getMessage() {
         return super.getMessage();
     }
-
 }

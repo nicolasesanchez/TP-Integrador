@@ -34,6 +34,10 @@ public class TallerMecanico {
         return base.getClientes();
     }
 
+    public ResultSet getRepuestos() {
+        return base.getRepuestos();
+    }
+
     public ArrayList<Cliente> getClientesCache() {
         return clientes;
     }
@@ -58,23 +62,9 @@ public class TallerMecanico {
         base.addOrder(ot);
     }
 
-    public void modificarOrden(OrdenTrabajo ot, int horas, Repuesto rep) throws OrdenTrabajoNotFoundException {
-        resultSet = base.findOrderByID(ot.getID());
-
-        try {
-            if (!resultSet.isBeforeFirst()) {
-                throw new OrdenTrabajoNotFoundException(String.format("The order '%d' was not found in the data base", ot.getID()));
-            } else {
-                int index = ordenes.indexOf(ot);
-                OrdenTrabajo modify = ordenes.get(index);
-                modify.setHorasTrabajadas(horas);
-                modify.setRepuestosUtilizados(rep);
-                if (modify.getEstado().equals("PENDING")) {
-                    modify.setEstado(Estado.WIP);
-                }
-                base.updateOrder(modify, rep);
-            }
-        } catch (SQLException e) {}
+    public void modificarOrden(int orderID, int repID, int horas, int cantRep) {
+        ordenes.get(orderID - 1).setEstado(Estado.WIP);
+        base.updateOrder(orderID, repID, horas, cantRep);
     }
 
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {
@@ -82,7 +72,7 @@ public class TallerMecanico {
         base.addClient(cliente);
     }
 
-    public void bajaCliente(int id) throws ClientNotFoundException {
+    public void bajaCliente(int id) throws CustomException {
         findClientByID(id);
         clientes.remove(clientes.get(id - 1));
         base.deleteClient(id);
@@ -101,15 +91,39 @@ public class TallerMecanico {
         return this.empleados;
     }
 
-    public ResultSet findClientByID(int id) throws ClientNotFoundException {
+    public ResultSet findClientByID(int id) throws CustomException {
         resultSet = base.findClientByID(id);
+        validateRS(String.format("The client %d was not found in the database", id), "client");
+        return resultSet;
+    }
+
+    public ResultSet findOrderByID(int id) throws CustomException {
+        resultSet = base.findOrderByID(id);
+        validateRS(String.format("The order with ID %d was not found in the database", id), "order");
+        return resultSet;
+    }
+
+    public ResultSet findRepuestoByID(int id) throws CustomException {
+        resultSet = base.findRepuestoByID(id);
+        validateRS(String.format("The rep with ID %d was not found in the database", id), "rep");
+        return resultSet;
+    }
+
+    private void validateRS(String message, String typeException) throws CustomException {
         try {
             if (!resultSet.isBeforeFirst()) {
-                ExceptionUtil.throwClientNotFoundException(String.format("The client %d was not found in the database", id));
+                switch (typeException) {
+                    case "client":
+                        throw new ClientNotFoundException(message);
+                    case "order":
+                        throw new OrdenTrabajoNotFoundException(message);
+                    case "rep":
+                        throw new RepuestoNotFoundException(message);
+                }
             }
-        } catch (SQLException e) {}
-
-        return resultSet;
+        } catch (SQLException e) {
+            resultSet = null;
+        }
     }
 
     public void showClientsList() {
@@ -128,6 +142,28 @@ public class TallerMecanico {
                 System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
             } else {
                 System.out.println("No se han encontrado clientes en el sistema");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showRepuestosList() {
+        resultSet = getRepuestos();
+        String leftAlignFormat = "| %-3d | %-24s | %-6d |%n";
+
+        try {
+            if (resultSet.isBeforeFirst()) {
+                System.out.format("+-----+--------------------------+--------+%n");
+                System.out.format("| ID  | Nombre                   | Precio |%n");
+                System.out.format("+-----+--------------------------+--------+%n");
+                while (resultSet.next()) {
+                    System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("Nombre"), resultSet.getDouble("Precio"));
+                }
+
+                System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
+            } else {
+                System.out.println("There are no 'repuestos' in the database, that's weird");
             }
         } catch (SQLException e) {
             e.printStackTrace();
