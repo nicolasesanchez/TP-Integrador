@@ -2,13 +2,13 @@ package com.entities;
 
 import com.utils.Util;
 
-public class AutoParte {
+public class Repuesto {
 	private static int genericId = 0;
 	private int id;
 	private String nombre;
 	private double precio;
 
-	public AutoParte(String nombre, double precio) {
+	public Repuesto(String nombre, double precio) {
 		genericId = Util.autoincrement(id);
 		this.id = genericId;
 		this.nombre = nombre;

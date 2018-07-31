@@ -8,7 +8,6 @@ public class Cliente {
     private int dni;
     private String nombre;
     private Direccion direccion;
-    private Vehiculo vehiculo;
 
     public Cliente(String nombre, int dni, Direccion direccion) {
         genericId = Util.autoincrement(genericId);
@@ -32,10 +31,6 @@ public class Cliente {
 
     public Direccion getDireccion() {
         return direccion;
-    }
-
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculo = vehiculo;
     }
 
     public void setNombre(String name) {

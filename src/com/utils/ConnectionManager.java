@@ -67,11 +67,13 @@ public class ConnectionManager {
 	}
 
 	public void addOrder(OrdenTrabajo ot) {
-		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (ID, FechaInicio, Estado, DNICliente, DNIEmpleado, PatenteVehiculo) values (%d, '%s', '%s', %d, %d, '%s')", ot.getID(), ot.getFechaInicio(), ot.getEstado(), ot.getDNICliente(), ot.getDNIEmpleado(), ot.getPatente()));
+		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (ID, FechaInicio, Estado, DNICliente, DNIEmpleado, Marca, Modelo, PatenteVehiculo, Descripcion)" +
+				"values (%d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s')", ot.getID(), ot.getFechaInicio(), ot.getEstado(), ot.getDNICliente(), ot.getDNIEmpleado(), ot.getMarca(), ot.getModelo(), ot.getPatente(), ot.getDescripcion()));
 	}
 
-	public void updateOrder(OrdenTrabajo ot, AutoParte ap) {
-		if (ot.getEstado().equals("WIP"))
+	// TODO insert new row in table OrdenTrabajoRepuesto with hours, reps, order id and rep id
+	public void updateOrder(OrdenTrabajo ot, Repuesto ap) {
+		if (ot.getEstado().equals("WIP")) // what?
 		executeQuery(String.format("update master.dbo.OrdenTrabajo set Estado = %s where id = %d;", ot.getEstado(), ot.getID()));
 		executeQuery(String.format("insert into master.dbo.OrdenTrabajo (CantidadHoras, IDRepuestoUtilizado) values (%d, %d", ot.getHorasTrabajadas(), ap.getId()));
 	}

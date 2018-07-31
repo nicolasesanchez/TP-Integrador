@@ -58,7 +58,7 @@ public class TallerMecanico {
         base.addOrder(ot);
     }
 
-    public void modificarOrden(OrdenTrabajo ot, int horas, AutoParte rep) throws OrdenTrabajoNotFoundException {
+    public void modificarOrden(OrdenTrabajo ot, int horas, Repuesto rep) throws OrdenTrabajoNotFoundException {
         resultSet = base.findOrderByID(ot.getID());
 
         try {
@@ -88,9 +88,13 @@ public class TallerMecanico {
         base.deleteClient(id);
     }
 
-    public void modificarCliente(Cliente cliente) {
-        clientes.set(clientes.indexOf(cliente), cliente);
-        base.updateClient(cliente);
+    public void modificarCliente(int id, String name, int dni, String direccion, String provincia) {
+        Cliente clientEdit = clientes.get(id - 1);
+        clientEdit.setNombre(name);
+        clientEdit.setDni(dni);
+        clientEdit.getDireccion().setDireccion(direccion);
+        clientEdit.getDireccion().setProvincia(provincia);
+        base.updateClient(clientEdit);
     }
 
     public ArrayList<Empleado> getEmpleados() {
@@ -106,10 +110,6 @@ public class TallerMecanico {
         } catch (SQLException e) {}
 
         return resultSet;
-    }
-
-    public static Cliente getClientByID(int id) {
-        return clientes.get(id - 1);
     }
 
     public void showClientsList() {

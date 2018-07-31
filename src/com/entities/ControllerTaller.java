@@ -149,12 +149,12 @@ public class ControllerTaller {
         emp = Util.getRandomEmployee();
         emp.agregarCliente(name, dni, direccion, provincia);
         showClientMenu();
-        showClientsOptions();
     }
 
     private void modifyClientMenu() {
         int id;
-        Cliente client = null;
+        boolean ok = false;
+
         do {
             System.out.println("Ingrese el ID del cliente que desea modificar o -1 para volver:");
             id = input.nextInt();
@@ -167,7 +167,6 @@ public class ControllerTaller {
                 ResultSet rs = taller.findClientByID(id);
                 if (rs != null) {
                     rs.next();
-                    client = taller.getClientesCache().get(rs.getInt("ID") - 1);
                     String name = null;
                     int dni = 0;
                     String direccion = null;
@@ -178,18 +177,16 @@ public class ControllerTaller {
                     dni = obtainDNIValue(dni);
                     direccion = obtainValue("direccion", direccion);
                     provincia = obtainValue("provincia", provincia);
-                    client.setNombre(name);
-                    client.setDni(dni);
-                    client.getDireccion().setDireccion(direccion);
-                    client.getDireccion().setProvincia(provincia);
-                    emp.modificarCliente(client);
+                    emp.modificarCliente(rs.getInt("ID"), name, dni, direccion, provincia);
+                    ok = true;
                 }
             } catch (ClientNotFoundException e) {
                 System.out.println(e.getMessage());
+                ok = false;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } while (client == null);
+        } while (!ok);
 
         showClientMenu();
     }
@@ -259,17 +256,20 @@ public class ControllerTaller {
 
     private void showOrderMenu() {
         ResultSet rs = taller.getOrdenes();
-        String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-7s | %-32s | %-15d | %-10d |%n";
+        String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-13s | %-13s | %-9s | %-32s |%n";
 
         try {
             if (rs.isBeforeFirst()) {
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
-                System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Patente | Descripcion                      | HorasTrabajadas | IDRepuesto |%n");
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+                System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Marca         | Modelo        | Patente   | Descripcion                      |%n");
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
                 while (rs.next()) {
-                    System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("FechaInicio"), rs.getString("FechaFin"), rs.getString("Estado"), rs.getInt("DNICliente"), rs.getInt("DNIEmpleado"), rs.getString("Patente"), rs.getString("Descripcion"), rs.getInt("IDRepuestoUtilizado"));
+                    System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("FechaInicio"),
+                            rs.getString("FechaFin"), rs.getString("Estado"), rs.getInt("DNICliente"),
+                            rs.getInt("DNIEmpleado"), rs.getString("Marca"), rs.getString("Modelo"),
+                            rs.getString("Patente"), rs.getString("Descripcion"));
                 }
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------+----------------------------------+-----------------+------------+%n");
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
             } else {
                 System.out.println("No se han encontrado ordenes en el sistema");
             }
@@ -315,9 +315,8 @@ public class ControllerTaller {
         patente = obtainValue("patente", patente);
         description = obtainValue("descripcion", description);
 
-        Vehiculo vehiculo = new Vehiculo(clientID, patente, marca, modelo);
-
-        emp.crearOrdenTrabajo(clientID, vehiculo, description);
+        emp.crearOrdenTrabajo(clientID, marca, modelo, patente, description);
+        showOrdersOptions();
     }
 
     public void generateTicket() {

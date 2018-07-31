@@ -12,26 +12,22 @@ public class OrdenTrabajo {
     private Estado estado;
     private int DNICliente;
     private int DNIempleado;
-    private int horasTrabajadas;
-    private ArrayList<AutoParte> repuestosUtilizados;
-    // Datos obtenidos a partir del objeto vehículo
     private String patente;
     private String marca;
     private String modelo;
     private String descripcion;
 
-    public OrdenTrabajo(int DNICliente, int DNIEmpleado, Vehiculo vehiculo, String description) {
+    public OrdenTrabajo(int DNICliente, int DNIEmpleado, String marca, String modelo, String patente, String description) {
         genericId = Util.autoincrement(id);
         this.id = genericId;
         fechaInicio = Util.getCurrentTime();
         estado = Estado.PENDING;
         this.DNICliente = DNICliente;
         this.DNIempleado = DNIEmpleado;
-        patente = vehiculo.getPatente();
-        marca = vehiculo.getMarca();
-        modelo = vehiculo.getModelo();
+        this.patente = patente;
+        this.marca = marca;
+        this.modelo = modelo;
         this.descripcion = description;
-        horasTrabajadas = 0;
     }
 
     public int getDNICliente() {
@@ -44,25 +40,6 @@ public class OrdenTrabajo {
 
     public void setEstado(Estado state) {
         this.estado = state;
-    }
-
-    public void setHorasTrabajadas(int horas) throws IllegalArgumentException {
-        if (horas > 0) {
-            this.horasTrabajadas += horas;
-        } else {
-            throw new IllegalArgumentException("The value 'horas' cannot be lower than 1");
-        }
-    }
-
-    public int getHorasTrabajadas() {
-        return this.horasTrabajadas;
-    }
-
-    public void setRepuestosUtilizados(AutoParte rep) {
-        if (repuestosUtilizados == null) {
-            this.repuestosUtilizados = new ArrayList<>();
-        }
-        this.repuestosUtilizados.add(rep);
     }
 
     public String getFechaInicio() {
@@ -79,6 +56,18 @@ public class OrdenTrabajo {
 
     public String getPatente() {
         return patente;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
     }
 
 }

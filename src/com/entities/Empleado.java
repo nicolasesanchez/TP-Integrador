@@ -22,13 +22,13 @@ public class Empleado {
         return dni;
     }
 
-    public void crearOrdenTrabajo(int DNICliente, Vehiculo vehiculo, String description) {
-        OrdenTrabajo orden = new OrdenTrabajo(DNICliente, this.getDNI(), vehiculo, description);
+    public void crearOrdenTrabajo(int DNICliente, String marca, String modelo, String patente, String description) {
+        OrdenTrabajo orden = new OrdenTrabajo(DNICliente, this.getDNI(), marca, modelo, patente, description);
         taller.cargarOrdenTrabajo(orden);
     }
 
-    public void modificarOrdenTrabajo(OrdenTrabajo ot, int horas, AutoParte autoParte) throws OrdenTrabajoNotFoundException {
-        taller.modificarOrden(ot, horas, autoParte);
+    public void modificarOrdenTrabajo(OrdenTrabajo ot, int horas, Repuesto repuesto) throws OrdenTrabajoNotFoundException {
+        taller.modificarOrden(ot, horas, repuesto);
     }
 
     public void agregarCliente(String name, int dni, String direccion, String provincia) {
@@ -41,7 +41,7 @@ public class Empleado {
         taller.bajaCliente(id);
     }
 
-    public void modificarCliente(Cliente cliente) {
-        taller.modificarCliente(cliente);
+    public void modificarCliente(int id, String name, int dni, String direccion, String provincia) {
+        taller.modificarCliente(id, name, dni, direccion, provincia);
     }
 }
