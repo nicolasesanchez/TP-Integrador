@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ControllerTaller {
-    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Generar factura", "Generar historial de 'algo'"};
+    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Ver detalle de orden", "Generar historial de 'algo'"};
     private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
     private String[] orderOptions = {"Agregar orden", "Agregar trabajo realizado a orden", "Cerrar Orden"};
     private static Scanner input;
