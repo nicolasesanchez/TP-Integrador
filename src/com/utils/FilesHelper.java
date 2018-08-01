@@ -1,8 +1,5 @@
 package com.utils;
 
-import com.entities.ControllerTaller;
-import com.entities.TallerMecanico;
-
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,6 +67,8 @@ public class FilesHelper {
                             result.getString("Descripcion")));
                 }
             }
+            bufferedWriter.flush();
+            bufferedWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
