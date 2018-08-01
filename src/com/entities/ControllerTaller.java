@@ -1,6 +1,7 @@
 package com.entities;
 
 import com.customExceptionClasses.CustomException;
+import com.utils.FilesHelper;
 import com.utils.Util;
 import com.utils.Validator;
 
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ControllerTaller {
-    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Ver ordenes finalizadas"};
+    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Ver ordenes finalizadas", "Crear archivo CSV con ordendes finalizadas"};
     private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
     private String[] orderOptions = {"Agregar orden", "Agregar trabajo realizado a orden", "Ver detalle de orden", "Cerrar Orden"};
     private static Scanner input;
@@ -72,6 +73,8 @@ public class ControllerTaller {
             case 3:
             	showAllOrders();
                 break;
+            case 4:
+                FilesHelper.createFileSCV();
             default:
                 break;
         }
