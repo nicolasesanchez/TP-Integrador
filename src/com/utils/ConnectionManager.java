@@ -116,7 +116,7 @@ public class ConnectionManager {
 		try {
 			statement.executeQuery(query);
 		} catch(SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -160,7 +160,7 @@ public class ConnectionManager {
 		try {
 			resultSet = statement.executeQuery(query);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			resultSet = null;
 		}
 

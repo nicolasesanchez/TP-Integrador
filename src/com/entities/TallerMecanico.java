@@ -235,10 +235,10 @@ public class TallerMecanico {
             // TODO hacer algo parecido a lo que hice en el calculo, ir a la tabla intermedia con el idOrden y de ahi obtener
             // la cantidad de reps, horas, y de la tabla de reps sacar el nombre y precio unitario, usar inner join? Puede servir
             if (resultSet.isBeforeFirst()) {
+                System.out.format("+---------------------------------+----------+-------+-------------+%n");
+                System.out.format("| Repuesto                        | Cantidad | Horas | Precio Unit |%n");
+                System.out.format("+---------------------------------+----------+-------+-------------+%n");
                 while (resultSet.next()) {
-                    System.out.format("+---------------------------------+----------+-------+-------------+%n");
-                    System.out.format("| Repuesto                        | Cantidad | Horas | Precio Unit |%n");
-                    System.out.format("+---------------------------------+----------+-------+-------------+%n");
                     System.out.format(leftAlignFormat, resultSet.getString("Nombre"), resultSet.getInt("CantidadRepuestos"), resultSet.getInt("CantidadHoras"), String.valueOf(resultSet.getBigDecimal("Precio")));
                 }
                 System.out.format("+---------------------------------+----------+-------+-------------+%n");

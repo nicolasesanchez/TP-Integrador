@@ -58,6 +58,7 @@ public class FilesHelper {
         try {
             if (result.isBeforeFirst()) {
                 bufferedWriter.write("ID;FechaInicio;FechaFin;Estado;DNICliente;DNIEmpleado;Marca;Modelo;PatenteVehiculo;Descripcion;Total");
+                bufferedWriter.newLine();
                 while (result.next()) {
                     bufferedWriter.write(String.format("%d;%s;%s;%s;%d;%d;%s;%s;%s;%s;%s", result.getInt("ID"), result.getString("FechaInicio"),
                             result.getString("FechaFin"), result.getString("Estado"),
@@ -65,6 +66,7 @@ public class FilesHelper {
                             String.valueOf(result.getBigDecimal("Total")), result.getString("Marca"),
                             result.getString("Modelo"), result.getString("PatenteVehiculo"),
                             result.getString("Descripcion")));
+                    bufferedWriter.newLine();
                 }
             }
             bufferedWriter.flush();

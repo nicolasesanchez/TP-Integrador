@@ -8,5 +8,4 @@ public class Program {
     private static void init() {
         new ControllerTaller();
     }
-
 }
