@@ -233,23 +233,20 @@ public class TallerMecanico {
     }
     
     public void showDetailForOrder(ResultSet rs) {
-    	String leftAlignFormat = "| %-30s | %-8d | %-5d | %-11s |%n";
-
-    	// TODO hacer algo parecido a lo que hice en el calculo, ir a la tabla intermedia con el idOrden y de ahí obtener
-    	// la cantidad de reps, horas, y de la tabla de reps sacar el nombre y precio unitario, usar inner join? Puede servir
     	try {
-		if (rs.isBeforeFirst()) {
-			rs.next();
-			System.out.format("+---------------------------------+----------+-------+--------+%n");
-			System.out.format("| Repuesto                        | Cantidad | Horas | Precio |%n");
-			System.out.format("+---------------------------------+----------+-------+--------+%n");
-				System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
-						resultSet.getString("FechaFin"), resultSet.getString("Estado"),
-						resultSet.getInt("DNICliente"), resultSet.getInt("DNIEmpleado"),
-						String.valueOf(resultSet.getBigDecimal("Total")), resultSet.getString("Marca"),
-						resultSet.getString("Modelo"), resultSet.getString("PatenteVehiculo"),
-						resultSet.getString("Descripcion"));
-			System.out.format("+---------------------------------+----------+-------+--------+%n");
+    	    rs.next();
+            resultSet = base.getDetailOfOrderID(rs.getInt("OrdenID"));
+            String leftAlignFormat = "| %-31s | %-8d | %-5d | %-11s |%n";
+
+            // TODO hacer algo parecido a lo que hice en el calculo, ir a la tabla intermedia con el idOrden y de ahi obtener
+            // la cantidad de reps, horas, y de la tabla de reps sacar el nombre y precio unitario, usar inner join? Puede servir
+            if (resultSet.isBeforeFirst()) {
+			resultSet.next();
+			System.out.format("+---------------------------------+----------+-------+-------------+%n");
+			System.out.format("| Repuesto                        | Cantidad | Horas | Precio Unit |%n");
+			System.out.format("+---------------------------------+----------+-------+-------------+%n");
+				System.out.format(leftAlignFormat, resultSet.getString("Nombre"), resultSet.getInt("CantidadRepuestos"), resultSet.getInt("CantidadHoras"), String.valueOf(resultSet.getBigDecimal("Precio")));
+			System.out.format("+---------------------------------+----------+-------+-------------+%n");
 		} else {
 			System.out.println("No se han encontrado ordenes en el sistema");
 		}

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ControllerTaller {
-    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Generar historial de 'algo'"};
+    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Ver ordenes"};
     private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
     private String[] orderOptions = {"Agregar orden", "Agregar trabajo realizado a orden", "Ver detalle de orden", "Cerrar Orden"};
     private static Scanner input;
@@ -74,7 +74,7 @@ public class ControllerTaller {
                 showOrdersMenu();
                 break;
             case 3:
-            	generateFile();
+            	showAllOrders();
                 break;
             default:
                 break;
@@ -413,7 +413,7 @@ public class ControllerTaller {
     
 	private void showOrderDetail() {
 		int orderID = 0;
-		boolean ok = false;
+		boolean ok;
 		do {
 			System.out.println("Ingrese el ID de la orden que desea ver: ");
 			orderID = input.nextInt();
@@ -439,7 +439,8 @@ public class ControllerTaller {
         emp = Util.getRandomEmployee();
     }
 
-    public void generateFile() {
-
+    public void showAllOrders() {
+        taller.showOrdersList(true);
+        showDefaultOptions();
     }
 }

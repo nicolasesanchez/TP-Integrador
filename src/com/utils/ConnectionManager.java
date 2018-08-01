@@ -140,6 +140,10 @@ public class ConnectionManager {
 		return executeQueryWithReturn(String.format("select * from master.dbo.Cliente where ID = %d", id));
 	}
 
+	public ResultSet getDetailOfOrderID(int orderID) {
+		return executeQueryWithReturn(String.format("select R.Nombre, OTR.CantidadHoras,OTR.CantidadRepuestos, R.Precio from OrdenTrabajoRepuesto as OTR inner join Repuesto as R on %d = R.ID", orderID));
+	}
+
 	public ResultSet findOrderByID(int id) {
 		return executeQueryWithReturn(String.format("select * from master.dbo.OrdenTrabajo where ID = %d", id));
 	}
