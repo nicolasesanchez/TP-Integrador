@@ -166,7 +166,7 @@ public class TallerMecanico {
                 System.out.format("| ID  | Nombre                   | Precio |%n");
                 System.out.format("+-----+--------------------------+--------+%n");
                 while (resultSet.next()) {
-                    System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("Nombre"), resultSet.getDouble("Precio"));
+                    System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("Nombre"), resultSet.getBigDecimal("Precio"));
                 }
 
                 System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
