@@ -7,6 +7,7 @@ import com.utils.Validator;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ControllerTaller {
@@ -87,10 +88,14 @@ public class ControllerTaller {
 
         int option;
         do {
-            showClientsOptions();
-            option = input.nextInt();
-            // Esto se 'come' el enter
-            input.nextLine();
+            try {
+                showClientsOptions();
+                option = input.nextInt();
+                // Esto se 'come' el enter
+                input.nextLine();
+            } catch (InputMismatchException e) {
+                option = 0;
+            }
         } while (!Validator.isValidOption(option, 3));
         redirectToClientOptions(option);
     }
@@ -157,14 +162,14 @@ public class ControllerTaller {
         boolean ok = false;
 
         do {
-            System.out.println("Ingrese el ID del cliente que desea modificar o -1 para volver:");
-            id = input.nextInt();
-
-            if (id == -1) {
-                break;
-            }
-
             try {
+                System.out.println("Ingrese el ID del cliente que desea modificar o -1 para volver:");
+                id = input.nextInt();
+
+                if (id == -1) {
+                    break;
+                }
+
                 ResultSet rs = taller.findClientByID(id);
                 if (rs != null) {
                     rs.next();
@@ -186,6 +191,8 @@ public class ControllerTaller {
                 ok = false;
             } catch (SQLException e) {
                 e.printStackTrace();
+            } catch (InputMismatchException e) {
+                ok = false;
             }
         } while (!ok);
 
@@ -197,6 +204,7 @@ public class ControllerTaller {
         boolean ok;
 
         do {
+            try {
             System.out.println("Ingrese el ID del cliente que desea eliminar o -1 para volver:");
             id = input.nextInt();
 
@@ -204,11 +212,12 @@ public class ControllerTaller {
                 break;
             }
 
-            try {
                 emp.bajaCliente(id);
                 ok = true;
             } catch (CustomException e) {
                 System.out.println(e.getMessage());
+                ok = false;
+            } catch (InputMismatchException e) {
                 ok = false;
             }
         } while (!ok);
@@ -225,6 +234,8 @@ public class ControllerTaller {
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
                 value = null;
+            } catch (InputMismatchException e) {
+                value = null;
             }
         } while (value == null);
 
@@ -234,9 +245,13 @@ public class ControllerTaller {
     @SuppressWarnings("ParameterCanBeLocal")
     private int obtainDNIValue(int value) {
         do {
-            System.out.println("Ingrese DNI: ");
-            value = input.nextInt();
-            input.nextLine();
+            try {
+                System.out.println("Ingrese DNI: ");
+                value = input.nextInt();
+                input.nextLine();
+            } catch (InputMismatchException e) {
+                value = 0;
+            }
         } while (value != -1 && !Validator.isValidDNI(value));
 
         return value;
@@ -244,8 +259,12 @@ public class ControllerTaller {
 
     private int obtainValue(String field, int value) {
         do {
-            System.out.printf("Ingerese %s: ", field);
-            value = input.nextInt();
+            try {
+                System.out.printf("Ingerese %s: ", field);
+                value = input.nextInt();
+            } catch (InputMismatchException e) {
+                value = 0;
+            }
         } while(value <= 0);
 
         return value;
@@ -270,10 +289,14 @@ public class ControllerTaller {
         taller.showOrdersList(false);
         int option;
         do {
-            showOrdersOptions();
-            option = input.nextInt();
-            // Esto se 'come' el enter
-            input.nextLine();
+            try {
+                showOrdersOptions();
+                option = input.nextInt();
+                // Esto se 'come' el enter
+                input.nextLine();
+            } catch (InputMismatchException e) {
+                option = 0;
+            }
         } while (!Validator.isValidOption(option, 4));
         redirectToOrderOptions(option);
     }
@@ -309,6 +332,8 @@ public class ControllerTaller {
                 ok = false;
             } catch (SQLException e) {
                 ok = false;
+            } catch (InputMismatchException e) {
+                ok = false;
             }
         } while (!ok);
 
@@ -334,6 +359,7 @@ public class ControllerTaller {
         boolean ok = false;
         setEmployee();
         do {
+            try {
             System.out.println("Ingrese el ID del orden a la que desea agregarle trabajo realizado o -1 para cancelar: ");
             orderID = input.nextInt();
 
@@ -341,7 +367,6 @@ public class ControllerTaller {
                 break;
             }
 
-            try {
                 ResultSet rs = taller.findOrderByID(orderID);
                 ResultSet rsRep = null;
                 if (rs != null) {
@@ -380,6 +405,8 @@ public class ControllerTaller {
                 ok = false;
             } catch (SQLException e) {
                 e.printStackTrace();
+            } catch (InputMismatchException e) {
+                ok = false;
             }
 
         } while(!ok);
@@ -393,6 +420,7 @@ public class ControllerTaller {
         setEmployee();
 
         do {
+            try {
             System.out.println("Ingrese el ID de la orden que desea cerrar o -1 para cancelar: ");
             orderID = input.nextInt();
 
@@ -400,11 +428,12 @@ public class ControllerTaller {
                 break;
             }
 
-            try {
                 emp.cerrarOrden(orderID);
                 ok = true;
             } catch (CustomException e) {
                 System.out.println(e.getMessage());
+                ok = false;
+            } catch (InputMismatchException e) {
                 ok = false;
             }
         } while(!ok);
@@ -416,19 +445,21 @@ public class ControllerTaller {
 		int orderID = 0;
 		boolean ok;
 		do {
+		    try {
 			System.out.println("Ingrese el ID de la orden que desea ver: ");
 			orderID = input.nextInt();
 
 			if (orderID == -1) {
 				break;
 			}
-			try {
 				taller.showDetailForOrder(taller.findOrderByID(orderID));
 				ok = true;
 			} catch (CustomException e) {
 				System.out.println(e.getMessage());
 				ok = false;
-			}
+			} catch (InputMismatchException e) {
+		        ok = false;
+            }
 		} while (!ok);
 		showOrdersMenu();
 	}
