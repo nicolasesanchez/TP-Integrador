@@ -110,7 +110,7 @@ public class ControllerTaller {
                 break;
             case 3:
                 // TODO cerrar orden y sumar totales
-                //closeOrderMenu();
+                closeOrderMenu();
                 break;
             default:
                 break;
@@ -147,7 +147,7 @@ public class ControllerTaller {
         direccion = obtainValue("direccion", direccion);
         provincia = obtainValue("provincia", provincia);
 
-        emp = Util.getRandomEmployee();
+        setEmployee();
         emp.agregarCliente(name, dni, direccion, provincia);
         showClientMenu();
     }
@@ -195,6 +195,7 @@ public class ControllerTaller {
     private void removeClientMenu() {
         int id;
         boolean ok;
+
         do {
             System.out.println("Ingrese el ID del cliente que desea eliminar o -1 para volver:");
             id = input.nextInt();
@@ -265,26 +266,8 @@ public class ControllerTaller {
     }
 
     private void showOrdersMenu() {
-        ResultSet rs = taller.getOrdenes();
-        String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-13s | %-13s | %-9s | %-32s |%n";
 
-        try {
-            if (rs.isBeforeFirst()) {
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
-                System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Marca         | Modelo        | Patente   | Descripcion                      |%n");
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
-                while (rs.next()) {
-                    System.out.format(leftAlignFormat, rs.getInt("ID"), rs.getString("FechaInicio"),
-                            rs.getString("FechaFin"), rs.getString("Estado"), rs.getInt("DNICliente"),
-                            rs.getInt("DNIEmpleado"), rs.getString("Marca"), rs.getString("Modelo"),
-                            rs.getString("Patente"), rs.getString("Descripcion"));
-                }
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
-            } else {
-                System.out.println("No se han encontrado ordenes en el sistema");
-            }
-        } catch (SQLException e) {}
-
+        taller.showOrdersList();
         int option;
         do {
             showOrdersOptions();
@@ -303,7 +286,7 @@ public class ControllerTaller {
         String description = null;
         boolean ok;
 
-        emp = Util.getRandomEmployee();
+        setEmployee();
         taller.showClientsList();
 
         do {
@@ -336,7 +319,7 @@ public class ControllerTaller {
         int cantRepuesto = 0;
         boolean found;
         boolean ok = false;
-        emp = Util.getRandomEmployee();
+        setEmployee();
         do {
             System.out.println("Ingrese el ID del orden a la que desea agregarle trabajo realizado o -1 para cancelar: ");
             orderID = input.nextInt();
@@ -386,6 +369,36 @@ public class ControllerTaller {
         } while(!ok);
 
         showOrdersMenu();
+    }
+
+    private void closeOrderMenu() {
+        int orderID;
+        boolean ok;
+        setEmployee();
+
+        do {
+            System.out.println("Ingrese el ID de la orden que desea cerrar o -1 para cancelar: ");
+            orderID = input.nextInt();
+
+            if (orderID == -1) {
+                break;
+            }
+
+            try {
+                emp.cerrarOrden(orderID);
+                ok = true;
+            } catch (CustomException e) {
+                System.out.println(e.getMessage());
+                ok = false;
+            }
+        } while(!ok);
+    }
+
+    /*
+     * Sets a random employee to make the selected action
+     */
+    private void setEmployee() {
+        emp = Util.getRandomEmployee();
     }
 
     public void generateTicket() {

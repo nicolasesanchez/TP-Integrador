@@ -67,6 +67,12 @@ public class TallerMecanico {
         base.updateOrder(orderID, repID, horas, cantRep);
     }
 
+    public void cerrarOrden(int orderID) throws CustomException {
+        findOrderByID(orderID);
+        ordenes.get(orderID - 1).setEstado(Estado.DONE);
+        base.closeOrder(orderID);
+    }
+
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {
         clientes.add(cliente);
         base.addClient(cliente);
@@ -169,4 +175,29 @@ public class TallerMecanico {
             e.printStackTrace();
         }
     }
+
+    public void showOrdersList() {
+        resultSet = getOrdenes();
+        String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-13s | %-13s | %-9s | %-32s |%n";
+
+        try {
+            if (resultSet.isBeforeFirst()) {
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+                System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Marca         | Modelo        | Patente   | Descripcion                      |%n");
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+                while (resultSet.next()) {
+                    System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
+                            resultSet.getString("FechaFin"), resultSet.getString("Estado"), resultSet.getInt("DNICliente"),
+                            resultSet.getInt("DNIEmpleado"), resultSet.getString("Marca"), resultSet.getString("Modelo"),
+                            resultSet.getString("Patente"), resultSet.getString("Descripcion"));
+                }
+                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+            } else {
+                System.out.println("No se han encontrado ordenes en el sistema");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

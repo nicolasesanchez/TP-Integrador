@@ -43,4 +43,8 @@ public class Empleado {
     public void modificarCliente(int id, String name, int dni, String direccion, String provincia) {
         taller.modificarCliente(id, name, dni, direccion, provincia);
     }
+
+    public void cerrarOrden(int orderID) throws CustomException {
+        taller.cerrarOrden(orderID);
+    }
 }

@@ -72,8 +72,12 @@ public class ConnectionManager {
 	}
 
 	public void updateOrder(int orderId, int repID, int horas, int cantRep) {
-		executeQuery(String.format("update master.dbo.OrdenTrabajo set Estado = '%s' where ID = %d", Estado.WIP, orderId));
+		updateOrder(orderId, Estado.WIP);
 		executeQuery(String.format("insert into master.dbo.OrdenTrabajoRepuesto (OrdenID, RepuestoID, CantidadHoras, CantidadRepuestos) values (%d, %d, %d, %d)", orderId, repID, horas, cantRep));
+	}
+
+	public void closeOrder(int orderID) {
+		updateOrder(orderID, Estado.DONE);
 	}
 
 	private void setTableAndValues() {
@@ -147,6 +151,10 @@ public class ConnectionManager {
 		}
 
 		return resultSet;
+	}
+
+	private void updateOrder(int id, Estado estado) {
+		executeQuery(String.format("update master.dbo.OrdenTrabajo set Estado = '%s' where ID = %d", estado, id));
 	}
 
 }
