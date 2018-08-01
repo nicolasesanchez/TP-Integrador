@@ -158,7 +158,7 @@ public class TallerMecanico {
 
     public void showRepuestosList() {
         resultSet = getRepuestos();
-        String leftAlignFormat = "| %-3d | %-24s | %-6ds |%n";
+        String leftAlignFormat = "| %-3d | %-24s | %-6s |%n";
 
         try {
             if (resultSet.isBeforeFirst()) {
