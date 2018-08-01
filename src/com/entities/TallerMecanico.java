@@ -158,13 +158,13 @@ public class TallerMecanico {
 
     public void showRepuestosList() {
         resultSet = getRepuestos();
-        String leftAlignFormat = "| %-3d | %-24s | %-6s |%n";
+        String leftAlignFormat = "| %-3d | %-24s | %-7s |%n";
 
         try {
             if (resultSet.isBeforeFirst()) {
-                System.out.format("+-----+--------------------------+--------+%n");
-                System.out.format("| ID  | Nombre                   | Precio |%n");
-                System.out.format("+-----+--------------------------+--------+%n");
+                System.out.format("+-----+--------------------------+---------+%n");
+                System.out.format("| ID  | Nombre                   | Precio  |%n");
+                System.out.format("+-----+--------------------------+---------+%n");
                 while (resultSet.next()) {
                     // Is there a way to put a BigDecimal in String.format?
                     System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("Nombre"), String.valueOf(resultSet.getBigDecimal("Precio")));

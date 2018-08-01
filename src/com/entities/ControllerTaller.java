@@ -365,6 +365,7 @@ public class ControllerTaller {
                     } while (!found);
 
                     if (rsRep != null) {
+                        rsRep.next();
                         cantRepuesto = obtainValue("cantidad de repuestos", cantRepuesto);
                         horas = obtainValue("cantidad de horas", horas);
                         emp.modificarOrdenTrabajo(rs.getInt("ID"), rsRep.getInt("ID"), horas, cantRepuesto);
