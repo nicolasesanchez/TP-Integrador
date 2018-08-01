@@ -299,7 +299,10 @@ public class ControllerTaller {
                     break;
                 }
 
-                clientDNI = taller.findClientByID(clientID).getInt("DNI");
+                // I think i should not do this, it's filthy i guess...
+                ResultSet rs = taller.findClientByID(clientID);
+                rs.next();
+                clientDNI = rs.getInt("DNI");
                 ok = true;
             } catch (CustomException e) {
                 System.out.println(e.getMessage());
