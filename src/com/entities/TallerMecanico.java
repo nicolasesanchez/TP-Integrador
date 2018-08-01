@@ -194,7 +194,7 @@ public class TallerMecanico {
 					System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Marca         | Modelo        | Patente   | Descripcion                      |%n");
 					System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
 					while (resultSet.next()) {
-						if (resultSet.getString("Estado").equals("WIP")) {
+						if (resultSet.getString("Estado").equals("WIP") || resultSet.getString("Estado").equals("PENDING")) {
 							System.out.format(leftAlignFormat, resultSet.getInt("ID"),
 									resultSet.getString("FechaInicio"), resultSet.getString("FechaFin"),
 									resultSet.getString("Estado"), resultSet.getInt("DNICliente"),
@@ -215,12 +215,14 @@ public class TallerMecanico {
 					System.out.format("| ID  | FechaInicio | FechaFin    | Estado  | DNICliente | DNIEmpleado | TotalFinal  | Marca         | Modelo        | Patente   | Descripcion                      |%n");
 					System.out.format("+-----+-------------+-------------+---------+------------+-------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
 					while (resultSet.next()) {
-						System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
-								resultSet.getString("FechaFin"), resultSet.getString("Estado"),
-								resultSet.getInt("DNICliente"), resultSet.getInt("DNIEmpleado"),
-								String.valueOf(resultSet.getBigDecimal("Total")), resultSet.getString("Marca"),
-								resultSet.getString("Modelo"), resultSet.getString("PatenteVehiculo"),
-								resultSet.getString("Descripcion"));
+                        if (resultSet.getString("Estado").equals("DONE")) {
+                            System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
+                                    resultSet.getString("FechaFin"), resultSet.getString("Estado"),
+                                    resultSet.getInt("DNICliente"), resultSet.getInt("DNIEmpleado"),
+                                    String.valueOf(resultSet.getBigDecimal("Total")), resultSet.getString("Marca"),
+                                    resultSet.getString("Modelo"), resultSet.getString("PatenteVehiculo"),
+                                    resultSet.getString("Descripcion"));
+                        }
 					}
 					System.out.format("+-----+-------------+-------------+---------+------------+-------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
 				} else {
