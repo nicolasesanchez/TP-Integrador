@@ -1,8 +1,8 @@
 package com.entities;
 
-import com.utils.Util;
+import java.math.BigDecimal;
 
-import java.util.ArrayList;
+import com.utils.Util;
 
 public class OrdenTrabajo {
     private static int genericId = 0;
@@ -16,9 +16,10 @@ public class OrdenTrabajo {
     private String marca;
     private String modelo;
     private String descripcion;
+    private BigDecimal total;
 
     public OrdenTrabajo(int DNICliente, int DNIEmpleado, String marca, String modelo, String patente, String description) {
-        genericId = Util.autoincrement(id);
+        genericId = Util.autoincrement(genericId);
         this.id = genericId;
         fechaInicio = Util.getCurrentTime();
         estado = Estado.PENDING;
@@ -36,6 +37,14 @@ public class OrdenTrabajo {
 
     public int getID() {
         return id;
+    }
+    
+    public void setTotal(BigDecimal total) {
+    	this.total = total;
+    }
+    
+    public BigDecimal getTotal() {
+    	return total;
     }
 
     public void setEstado(Estado state) {

@@ -79,7 +79,7 @@ public class ConnectionManager {
 
 	public void closeOrder(int orderID, String fechaFin, BigDecimal total) {
 		// Is there any way to pass a BigDecimal as String.format?
-		String query = "update master.dbo.OrdenTrabajo set Estado = " + Estado.DONE + ", FechaFin = " + fechaFin + ", Total = " + total + " where ID = " + orderID;
+		String query = "update master.dbo.OrdenTrabajo set Estado = '" + Estado.DONE + "', FechaFin = '" + fechaFin + "', Total = " + total + " where ID = " + orderID;
 		executeQuery(query);
 	}
 
@@ -119,7 +119,9 @@ public class ConnectionManager {
 	private void executeQuery(String query) {
 		try {
 			statement.executeQuery(query);
-		} catch(SQLException e) {}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ResultSet getClientes() {
@@ -141,6 +143,10 @@ public class ConnectionManager {
 	public ResultSet findOrderByID(int id) {
 		return executeQueryWithReturn(String.format("select * from master.dbo.OrdenTrabajo where ID = %d", id));
 	}
+	
+	public ResultSet findOrderRepByID(int id) {
+		return executeQueryWithReturn(String.format("select * from master.dbo.OrdenTrabajoRepuesto where OrdenID = %d", id));
+	}
 
 	public ResultSet findRepuestoByID(int id) {
 		return executeQueryWithReturn(String.format("select * from master.dbo.Repuesto where ID = %d", id));
@@ -150,6 +156,7 @@ public class ConnectionManager {
 		try {
 			resultSet = statement.executeQuery(query);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			resultSet = null;
 		}
 

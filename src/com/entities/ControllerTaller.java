@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ControllerTaller {
-    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Ver detalle de orden", "Generar historial de 'algo'"};
+    private String[] options = {"Menu de clientes", "Menu de ordenes de trabajo", "Generar historial de 'algo'"};
     private String[] clientOptions = {"Agregar cliente", "Modificar cliente", "Eliminar cliente"};
-    private String[] orderOptions = {"Agregar orden", "Agregar trabajo realizado a orden", "Cerrar Orden"};
+    private String[] orderOptions = {"Agregar orden", "Agregar trabajo realizado a orden", "Ver detalle de orden", "Cerrar Orden"};
     private static Scanner input;
     private static TallerMecanico taller;
     private Empleado emp;
@@ -74,10 +74,7 @@ public class ControllerTaller {
                 showOrdersMenu();
                 break;
             case 3:
-                generateTicket();
-                break;
-            case 4:
-                generateFile();
+            	generateFile();
                 break;
             default:
                 break;
@@ -109,9 +106,11 @@ public class ControllerTaller {
                 modifyOrderMenu();
                 break;
             case 3:
-                // TODO cerrar orden y sumar totales
-                closeOrderMenu();
+            	showOrderDetail();
                 break;
+            case 4:
+            	closeOrderMenu();
+            	break;
             default:
                 break;
         }
@@ -267,14 +266,14 @@ public class ControllerTaller {
 
     private void showOrdersMenu() {
 
-        taller.showOrdersList();
+        taller.showOrdersList(false);
         int option;
         do {
             showOrdersOptions();
             option = input.nextInt();
             // Esto se 'come' el enter
             input.nextLine();
-        } while (!Validator.isValidOption(option, 3));
+        } while (!Validator.isValidOption(option, 4));
         redirectToOrderOptions(option);
     }
 
@@ -411,16 +410,33 @@ public class ControllerTaller {
 
         showOrdersMenu();
     }
+    
+	private void showOrderDetail() {
+		int orderID = 0;
+		boolean ok = false;
+		do {
+			System.out.println("Ingrese el ID de la orden que desea ver: ");
+			orderID = input.nextInt();
+
+			if (orderID == -1) {
+				break;
+			}
+			try {
+				taller.showDetailForOrder(taller.findOrderByID(orderID));
+				ok = true;
+			} catch (CustomException e) {
+				System.out.println(e.getMessage());
+				ok = false;
+			}
+		} while (!ok);
+		showOrdersMenu();
+	}
 
     /*
      * Sets a random employee to perform the selected action
      */
     private void setEmployee() {
         emp = Util.getRandomEmployee();
-    }
-
-    public void generateTicket() {
-
     }
 
     public void generateFile() {

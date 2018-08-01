@@ -75,9 +75,8 @@ public class TallerMecanico {
         OrdenTrabajo closeOrder = ordenes.get(orderID - 1);
         closeOrder.setEstado(Estado.DONE);
         closeOrder.setFechaFin();
-        calculateFinalPrice(orderID);
-
-        base.closeOrder(orderID, closeOrder.getFechaFin(), );
+        closeOrder.setTotal(calculateFinalPrice(orderID));
+        base.closeOrder(orderID, closeOrder.getFechaFin(), closeOrder.getTotal());
     }
 
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {
@@ -184,32 +183,83 @@ public class TallerMecanico {
         }
     }
 
-    public void showOrdersList() {
+    public void showOrdersList(boolean showDetail) {
         resultSet = getOrdenes();
-        String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-13s | %-13s | %-9s | %-32s |%n";
+		try {
+			if (!showDetail) {
+				String leftAlignFormat = "| %-3d | %-11s | %-9s | %-7s | %-10d | %-11d | %-13s | %-13s | %-9s | %-32s |%n";
 
-        try {
-            if (resultSet.isBeforeFirst()) {
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
-                System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Marca         | Modelo        | Patente   | Descripcion                      |%n");
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
-                while (resultSet.next()) {
-                    System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
-                            resultSet.getString("FechaFin"), resultSet.getString("Estado"), resultSet.getInt("DNICliente"),
-                            resultSet.getInt("DNIEmpleado"), resultSet.getString("Marca"), resultSet.getString("Modelo"),
-                            resultSet.getString("PatenteVehiculo"), resultSet.getString("Descripcion"));
-                }
-                System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
-            } else {
-                System.out.println("No se han encontrado ordenes en el sistema");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+				if (resultSet.isBeforeFirst()) {
+					System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+					System.out.format("| ID  | FechaInicio | FechaFin  | Estado  | DNICliente | DNIEmpleado | Marca         | Modelo        | Patente   | Descripcion                      |%n");
+					System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+					while (resultSet.next()) {
+						if (resultSet.getString("Estado").equals("WIP")) {
+							System.out.format(leftAlignFormat, resultSet.getInt("ID"),
+									resultSet.getString("FechaInicio"), resultSet.getString("FechaFin"),
+									resultSet.getString("Estado"), resultSet.getInt("DNICliente"),
+									resultSet.getInt("DNIEmpleado"), resultSet.getString("Marca"),
+									resultSet.getString("Modelo"), resultSet.getString("PatenteVehiculo"),
+									resultSet.getString("Descripcion"));
+						}
+					}
+					System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+				} else {
+					System.out.println("No se han encontrado ordenes en el sistema");
+				}
+			} else {
+				String leftAlignFormat = "| %-3d | %-11s | %-11s | %-7s | %-10d | %-11d | %-11s %-13s | %-13s | %-9s | %-32s |%n";
+
+				if (resultSet.isBeforeFirst()) {
+					System.out.format("+-----+-------------+-------------+---------+------------+-------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+					System.out.format("| ID  | FechaInicio | FechaFin    | Estado  | DNICliente | DNIEmpleado | TotalFinal  | Marca         | Modelo        | Patente   | Descripcion                      |%n");
+					System.out.format("+-----+-------------+-------------+---------+------------+-------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+					while (resultSet.next()) {
+						System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
+								resultSet.getString("FechaFin"), resultSet.getString("Estado"),
+								resultSet.getInt("DNICliente"), resultSet.getInt("DNIEmpleado"),
+								String.valueOf(resultSet.getBigDecimal("Total")), resultSet.getString("Marca"),
+								resultSet.getString("Modelo"), resultSet.getString("PatenteVehiculo"),
+								resultSet.getString("Descripcion"));
+					}
+					System.out.format("+-----+-------------+-------------+---------+------------+-------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
+				} else {
+					System.out.println("No se han encontrado ordenes en el sistema");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public void showDetailForOrder(ResultSet rs) {
+    	String leftAlignFormat = "| %-30s | %-8d | %-5d | %-11s |%n";
+
+    	// TODO hacer algo parecido a lo que hice en el calculo, ir a la tabla intermedia con el idOrden y de ahí obtener
+    	// la cantidad de reps, horas, y de la tabla de reps sacar el nombre y precio unitario, usar inner join? Puede servir
+    	try {
+		if (rs.isBeforeFirst()) {
+			rs.next();
+			System.out.format("+---------------------------------+----------+-------+--------+%n");
+			System.out.format("| Repuesto                        | Cantidad | Horas | Precio |%n");
+			System.out.format("+---------------------------------+----------+-------+--------+%n");
+				System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
+						resultSet.getString("FechaFin"), resultSet.getString("Estado"),
+						resultSet.getInt("DNICliente"), resultSet.getInt("DNIEmpleado"),
+						String.valueOf(resultSet.getBigDecimal("Total")), resultSet.getString("Marca"),
+						resultSet.getString("Modelo"), resultSet.getString("PatenteVehiculo"),
+						resultSet.getString("Descripcion"));
+			System.out.format("+---------------------------------+----------+-------+--------+%n");
+		} else {
+			System.out.println("No se han encontrado ordenes en el sistema");
+		}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
     }
 
     private BigDecimal calculateFinalPrice(int orderID) {
-        resultSet = base.findOrderByID(orderID);
+        resultSet = base.findOrderRepByID(orderID);
         BigDecimal price;
         BigDecimal sum = new BigDecimal(0);
         try {
