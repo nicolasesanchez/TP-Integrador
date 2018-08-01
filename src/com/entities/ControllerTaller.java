@@ -280,6 +280,7 @@ public class ControllerTaller {
 
     private void addOrderMenu() {
         int clientID = 0;
+        int clientDNI = 0;
         String marca = null;
         String modelo = null;
         String patente = null;
@@ -298,10 +299,12 @@ public class ControllerTaller {
                     break;
                 }
 
-                taller.findClientByID(clientID);
+                clientDNI = taller.findClientByID(clientID).getInt("DNI");
                 ok = true;
             } catch (CustomException e) {
                 System.out.println(e.getMessage());
+                ok = false;
+            } catch (SQLException e) {
                 ok = false;
             }
         } while (!ok);
@@ -313,7 +316,7 @@ public class ControllerTaller {
             modelo = obtainValue("modelo", modelo);
             patente = obtainValue("patente", patente);
             description = obtainValue("descripcion", description);
-            emp.crearOrdenTrabajo(clientID, marca, modelo, patente, description);
+            emp.crearOrdenTrabajo(clientDNI, marca, modelo, patente, description);
         }
 
         showOrdersMenu();

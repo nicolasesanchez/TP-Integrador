@@ -21,8 +21,8 @@ public class Empleado {
         return dni;
     }
 
-    public void crearOrdenTrabajo(int DNICliente, String marca, String modelo, String patente, String description) {
-        OrdenTrabajo orden = new OrdenTrabajo(DNICliente, this.getDNI(), marca, modelo, patente, description);
+    public void crearOrdenTrabajo(int clientDNI, String marca, String modelo, String patente, String description) {
+        OrdenTrabajo orden = new OrdenTrabajo(clientDNI, this.getDNI(), marca, modelo, patente, description);
         taller.cargarOrdenTrabajo(orden);
     }
 
