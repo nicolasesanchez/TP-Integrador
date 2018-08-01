@@ -346,6 +346,7 @@ public class ControllerTaller {
                 ResultSet rsRep = null;
                 if (rs != null) {
                     rs.next();
+                    orderID = rs.getInt("ID");
                     taller.showRepuestosList();
                     do {
                         System.out.println("Ingrese el ID del repuesto que desea agregar o -1 para cancelar: ");
@@ -355,7 +356,6 @@ public class ControllerTaller {
                             break;
                         }
 
-                        orderID = rs.getInt("ID");
                         try {
                             rsRep = taller.findRepuestoByID(repuestoID);
                             found = true;
