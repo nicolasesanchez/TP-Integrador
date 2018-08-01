@@ -13,10 +13,6 @@ public class Empleado {
         taller = TallerMecanico.getInstance();
     }
 
-    public String getNombre() {
-        return this.nombre;
-    }
-
     public int getDNI() {
         return dni;
     }

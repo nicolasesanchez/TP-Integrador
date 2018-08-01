@@ -1,7 +1,6 @@
 package com.entities;
 
 import java.math.BigDecimal;
-
 import com.utils.Util;
 
 public class OrdenTrabajo {

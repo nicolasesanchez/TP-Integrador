@@ -19,6 +19,9 @@ public class ControllerTaller {
     public ControllerTaller() {
         taller = TallerMecanico.getInstance();
         input = new Scanner(System.in);
+        this.init();
+        this.showMenu();
+        input.close();
     }
 
     public void init() {
@@ -37,13 +40,6 @@ public class ControllerTaller {
 
         taller.setNombre(name);
         Util.setUpCache();
-    }
-
-    public static void main(String[] args) {
-        ControllerTaller controller = new ControllerTaller();
-        controller.init();
-        controller.showMenu();
-        input.close();
     }
 
     public void showMenu() {

@@ -36,10 +36,6 @@ public class ConnectionManager {
 		return instance;
 	}
 
-	public static void main(String[] args) {
-		ConnectionManager con = ConnectionManager.getInstance();
-	}
-
 	private Connection getConnection() {
 		String ip = getIp();
 		Connection connection = null;
@@ -146,6 +142,10 @@ public class ConnectionManager {
 
 	public ResultSet findOrderByID(int id) {
 		return executeQueryWithReturn(String.format("select * from master.dbo.OrdenTrabajo where ID = %d", id));
+	}
+
+	public ResultSet getOrdenesCerradas() {
+		return executeQueryWithReturn("select * from master.dbo.OrdenTrabajo where Estado = 'DONE'");
 	}
 	
 	public ResultSet findOrderRepByID(int id) {

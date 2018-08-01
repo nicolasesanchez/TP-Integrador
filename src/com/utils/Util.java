@@ -38,8 +38,13 @@ public class Util {
     }
 
     public static void setUpCache() {
-        // Todo agregar los mismos datos que el archivo setUp.sql a las listas del taller
-        TallerMecanico.getInstance().getEmpleados().add(new Empleado("Blippi", 3871568));
+        Empleado emp = null;
+        emp = new Empleado("Valeria", 27837465);
+        TallerMecanico taller = TallerMecanico.getInstance();
+        taller.getEmpleados().add(emp);
+        emp = new Empleado("Pablo", 30928392);
+        taller.getEmpleados().add(emp);
+        emp = new Empleado("Andres", 32543890);
     }
 
 }

@@ -2,7 +2,6 @@ package com.utils;
 
 public class Validator {
     private final static String BLANK_SPACE_REGEX = "\\s*";
-    private final static String PATENTE_REGEX = "[A-Z]{3}-[0-9]{3}";
 
     public static String isValidValue(String value) throws IllegalArgumentException {
         if (value == null || value.matches(BLANK_SPACE_REGEX)) {

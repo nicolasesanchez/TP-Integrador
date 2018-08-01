@@ -41,14 +41,6 @@ public class TallerMecanico {
         return base.getRepuestos();
     }
 
-    public ArrayList<Cliente> getClientesCache() {
-        return clientes;
-    }
-
-    public ArrayList<OrdenTrabajo> getOrdenesCache() {
-        return ordenes;
-    }
-
     public ResultSet getOrdenes() {
         return base.getOrdenes();
     }

@@ -1,18 +1,16 @@
 package com.utils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import com.entities.TallerMecanico;
+
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FilesHelper {
-
-    public static void main(String[] args) {
-        System.out.println(getLocalPath());
-    }
 
     public static String getLocalPath() {
         // This returns the path according to the OS
@@ -30,6 +28,16 @@ public class FilesHelper {
         return br;
     }
 
+    private static BufferedWriter getFileToWrite(String path) {
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(path));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return bw;
+    }
+
     public static Map<String, String> getDataFromIniFile(BufferedReader br) throws IOException {
         Map<String, String> data = new HashMap<>();
         IniManager ini = new IniManager();
@@ -43,6 +51,30 @@ public class FilesHelper {
         }
 
         return data;
+    }
+
+    public static void createFileSCV() {
+        String line;
+        String local = getLocalPath();
+        BufferedWriter bufferedWriter = getFileToWrite(String.format("%s/historial.csv", local));
+        ResultSet result = ConnectionManager.getInstance().getOrdenesCerradas();
+        try {
+            if (result.isBeforeFirst()) {
+                bufferedWriter.write("ID;FechaInicio;FechaFin;Estado;DNICliente;DNIEmpleado;Marca;Modelo;PatenteVehiculo;Descripcion;Total");
+                while (result.next()) {
+                    bufferedWriter.write(String.format("%d;%s;%s;%s;%d;%d;%s;%s;%s;%s;%s", result.getInt("ID"), result.getString("FechaInicio"),
+                            result.getString("FechaFin"), result.getString("Estado"),
+                            result.getInt("DNICliente"), result.getInt("DNIEmpleado"),
+                            String.valueOf(result.getBigDecimal("Total")), result.getString("Marca"),
+                            result.getString("Modelo"), result.getString("PatenteVehiculo"),
+                            result.getString("Descripcion")));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static class IniManager {
