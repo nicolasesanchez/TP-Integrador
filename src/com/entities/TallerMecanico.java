@@ -170,7 +170,7 @@ public class TallerMecanico {
                     System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("Nombre"), String.valueOf(resultSet.getBigDecimal("Precio")));
                 }
 
-                System.out.format("+-----+--------------------------+-----------+--------------------------+--------------------------+%n");
+                System.out.format("+-----+--------------------------+---------+%n");
             } else {
                 System.out.println("There are no 'repuestos' in the database, that's weird");
             }

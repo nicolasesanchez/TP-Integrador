@@ -355,6 +355,7 @@ public class ControllerTaller {
                             break;
                         }
 
+                        orderID = rs.getInt("ID");
                         try {
                             rsRep = taller.findRepuestoByID(repuestoID);
                             found = true;
@@ -366,9 +367,10 @@ public class ControllerTaller {
 
                     if (rsRep != null) {
                         rsRep.next();
+                        repuestoID = rsRep.getInt("ID");
                         cantRepuesto = obtainValue("cantidad de repuestos", cantRepuesto);
                         horas = obtainValue("cantidad de horas", horas);
-                        emp.modificarOrdenTrabajo(rs.getInt("ID"), rsRep.getInt("ID"), horas, cantRepuesto);
+                        emp.modificarOrdenTrabajo(orderID, repuestoIDg, horas, cantRepuesto);
                     }
 
                     ok = true;
