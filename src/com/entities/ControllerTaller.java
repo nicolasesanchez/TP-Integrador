@@ -408,6 +408,8 @@ public class ControllerTaller {
                 ok = false;
             }
         } while(!ok);
+
+        showOrdersMenu();
     }
 
     /*

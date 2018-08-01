@@ -4,6 +4,7 @@ import com.entities.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Map;
 
@@ -76,8 +77,10 @@ public class ConnectionManager {
 		executeQuery(String.format("insert into master.dbo.OrdenTrabajoRepuesto (OrdenID, RepuestoID, CantidadHoras, CantidadRepuestos) values (%d, %d, %d, %d)", orderId, repID, horas, cantRep));
 	}
 
-	public void closeOrder(int orderID, String fechaFin) {
-		executeQuery(String.format("update master.dbo.OrdenTrabajo set Estado = '%s',FechaFin = '%s' where ID = %d", Estado.DONE, fechaFin, orderID));
+	public void closeOrder(int orderID, String fechaFin, BigDecimal total) {
+		// Is there any way to pass a BigDecimal as String.format?
+		String query = "update master.dbo.OrdenTrabajo set Estado = " + Estado.DONE + ", FechaFin = " + fechaFin + ", Total = " + total + " where ID = " + orderID;
+		executeQuery(query);
 	}
 
 	private void setTableAndValues() {
@@ -151,5 +154,10 @@ public class ConnectionManager {
 		}
 
 		return resultSet;
+	}
+
+	public Statement getTemporalStatement() throws SQLException {
+		Statement st = connection.createStatement();
+		return st;
 	}
 }

@@ -2,8 +2,11 @@ package com.entities;
 
 import com.customExceptionClasses.*;
 import com.utils.ConnectionManager;
+
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class TallerMecanico {
@@ -72,7 +75,9 @@ public class TallerMecanico {
         OrdenTrabajo closeOrder = ordenes.get(orderID - 1);
         closeOrder.setEstado(Estado.DONE);
         closeOrder.setFechaFin();
-        base.closeOrder(orderID, closeOrder.getFechaFin());
+        calculateFinalPrice(orderID);
+
+        base.closeOrder(orderID, closeOrder.getFechaFin(), );
     }
 
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {
@@ -201,6 +206,30 @@ public class TallerMecanico {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private BigDecimal calculateFinalPrice(int orderID) {
+        resultSet = base.findOrderByID(orderID);
+        BigDecimal price;
+        BigDecimal sum = new BigDecimal(0);
+        try {
+            // I don't like any of this...
+            Statement temp = base.getTemporalStatement();
+            ResultSet rs = null;
+            while (resultSet.next()) {
+                rs = temp.executeQuery(String.format("select Precio from master.dbo.Repuesto where ID = %d", resultSet.getInt("RepuestoID")));
+                rs.next();
+                price = rs.getBigDecimal("Precio");
+                sum = sum.add(price.multiply(new BigDecimal(resultSet.getInt("CantidadHoras"))));
+            }
+            rs.close();
+            temp.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("Dude there was a NullPointerException you know where");
+        }
+        return sum;
     }
 
 }

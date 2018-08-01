@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS master.dbo.OrdenTrabajoRepuesto
 create table Empleado (ID int identity(1,1) primary key not null, Nombre varchar(255), DNI int not null)
 create table Cliente (ID int primary key not null, DNI int not null, Nombre varchar(255), Direccion varchar(255), Provincia varchar(255))
 create table Repuesto (ID int identity(1,1) primary key not null, Nombre varchar(255), Precio decimal(8,2))
-create table OrdenTrabajo (ID int primary key not null, FechaInicio varchar(255) not null, FechaFin varchar(255), Estado varchar(255) not null, DNICliente int not null, DNIEmpleado int, Marca varchar(255) not null, Modelo varchar(255), PatenteVehiculo varchar(255) not null, Descripcion varchar (255))
+create table OrdenTrabajo (ID int primary key not null, FechaInicio varchar(255) not null, FechaFin varchar(255), Estado varchar(255) not null, DNICliente int not null, DNIEmpleado int, Marca varchar(255) not null, Modelo varchar(255), PatenteVehiculo varchar(255) not null, Descripcion varchar (255), Total decimal(14,2))
 create table OrdenTrabajoRepuesto (ID int identity(1,1) primary key not null, OrdenID int not null, RepuestoID int not null, CantidadHoras int, CantidadRepuestos int)
 insert into master.dbo.Empleado (Nombre, DNI) values ('Valeria', 27364536)
 insert into master.dbo.Empleado (Nombre, DNI) values ('Pablo', 30293847)
