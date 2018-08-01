@@ -370,7 +370,7 @@ public class ControllerTaller {
                         repuestoID = rsRep.getInt("ID");
                         cantRepuesto = obtainValue("cantidad de repuestos", cantRepuesto);
                         horas = obtainValue("cantidad de horas", horas);
-                        emp.modificarOrdenTrabajo(orderID, repuestoIDg, horas, cantRepuesto);
+                        emp.modificarOrdenTrabajo(orderID, repuestoID, horas, cantRepuesto);
                     }
 
                     ok = true;
