@@ -1,5 +1,6 @@
 package com.utils;
 
+import com.entities.ControllerTaller;
 import com.entities.TallerMecanico;
 
 import java.io.*;
@@ -54,7 +55,6 @@ public class FilesHelper {
     }
 
     public static void createFileSCV() {
-        String line;
         String local = getLocalPath();
         BufferedWriter bufferedWriter = getFileToWrite(String.format("%s/historial.csv", local));
         ResultSet result = ConnectionManager.getInstance().getOrdenesCerradas();

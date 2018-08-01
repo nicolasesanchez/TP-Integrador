@@ -75,6 +75,8 @@ public class ControllerTaller {
                 break;
             case 4:
                 FilesHelper.createFileSCV();
+                showMenu();
+                break;
             default:
                 break;
         }
