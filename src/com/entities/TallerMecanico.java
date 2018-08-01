@@ -208,7 +208,7 @@ public class TallerMecanico {
 					System.out.println("No se han encontrado ordenes en el sistema");
 				}
 			} else {
-				String leftAlignFormat = "| %-3d | %-11s | %-11s | %-7s | %-10d | %-11d | %-11s %-13s | %-13s | %-9s | %-32s |%n";
+				String leftAlignFormat = "| %-3d | %-11s | %-11s | %-7s | %-10d | %-11d | %-11s | %-13s | %-13s | %-9s | %-32s |%n";
 
 				if (resultSet.isBeforeFirst()) {
 					System.out.format("+-----+-------------+-------------+---------+------------+-------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
@@ -237,7 +237,7 @@ public class TallerMecanico {
     public void showDetailForOrder(ResultSet rs) {
     	try {
     	    rs.next();
-            resultSet = base.getDetailOfOrderID(rs.getInt("OrdenID"));
+            resultSet = base.getDetailOfOrderID(rs.getInt("ID"));
             String leftAlignFormat = "| %-31s | %-8d | %-5d | %-11s |%n";
 
             // TODO hacer algo parecido a lo que hice en el calculo, ir a la tabla intermedia con el idOrden y de ahi obtener

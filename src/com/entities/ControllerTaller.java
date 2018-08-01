@@ -441,6 +441,6 @@ public class ControllerTaller {
 
     public void showAllOrders() {
         taller.showOrdersList(true);
-        showDefaultOptions();
+        showMenu();
     }
 }
