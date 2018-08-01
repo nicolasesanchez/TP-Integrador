@@ -69,8 +69,10 @@ public class TallerMecanico {
 
     public void cerrarOrden(int orderID) throws CustomException {
         findOrderByID(orderID);
-        ordenes.get(orderID - 1).setEstado(Estado.DONE);
-        base.closeOrder(orderID);
+        OrdenTrabajo closeOrder = ordenes.get(orderID - 1);
+        closeOrder.setEstado(Estado.DONE);
+        closeOrder.setFechaFin();
+        base.closeOrder(orderID, closeOrder.getFechaFin());
     }
 
     public void altaCliente(Cliente cliente) throws IllegalArgumentException {

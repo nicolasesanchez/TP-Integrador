@@ -70,4 +70,12 @@ public class OrdenTrabajo {
         return descripcion;
     }
 
+    public void setFechaFin() {
+        fechaFin = Util.getCurrentTime();
+    }
+
+    public String getFechaFin() {
+        return fechaFin;
+    }
+
 }
