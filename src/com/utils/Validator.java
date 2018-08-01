@@ -12,15 +12,6 @@ public class Validator {
         }
     }
 
-    public static String validatePatente(String value) {
-        value = value.toUpperCase();
-        if (isValidValue(value) != null && value.matches(PATENTE_REGEX)) {
-            return value;
-        } else {
-            throw new IllegalArgumentException("The value contains invalid characters");
-        }
-    }
-
     public static boolean isValidOption(int option, int max) {
         return (option > 0 && option <= max) || option == -1;
     }

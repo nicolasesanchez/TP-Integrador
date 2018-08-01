@@ -189,7 +189,7 @@ public class TallerMecanico {
                     System.out.format(leftAlignFormat, resultSet.getInt("ID"), resultSet.getString("FechaInicio"),
                             resultSet.getString("FechaFin"), resultSet.getString("Estado"), resultSet.getInt("DNICliente"),
                             resultSet.getInt("DNIEmpleado"), resultSet.getString("Marca"), resultSet.getString("Modelo"),
-                            resultSet.getString("Patente"), resultSet.getString("Descripcion"));
+                            resultSet.getString("PatenteVehiculo"), resultSet.getString("Descripcion"));
                 }
                 System.out.format("+-----+-------------+-----------+---------+------------+-------------+---------------+---------------+-----------+----------------------------------+%n");
             } else {

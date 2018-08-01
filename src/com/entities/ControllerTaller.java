@@ -291,8 +291,13 @@ public class ControllerTaller {
 
         do {
             try {
-                System.out.print("Seleccione un ID de cliente: ");
+                System.out.print("Seleccione un ID de cliente o -1 para cancelar: ");
                 clientID = input.nextInt();
+
+                if (clientID == -1) {
+                    break;
+                }
+
                 taller.findClientByID(clientID);
                 ok = true;
             } catch (CustomException e) {
@@ -301,14 +306,16 @@ public class ControllerTaller {
             }
         } while (!ok);
 
-        input.nextLine();
-        System.out.println("Ingrese los datos del vehiculo");
-        marca = obtainValue("marca", marca);
-        modelo = obtainValue("modelo", modelo);
-        patente = obtainValue("patente", patente);
-        description = obtainValue("descripcion", description);
+        if (clientID != -1) {
+            input.nextLine();
+            System.out.println("Ingrese los datos del vehiculo");
+            marca = obtainValue("marca", marca);
+            modelo = obtainValue("modelo", modelo);
+            patente = obtainValue("patente", patente);
+            description = obtainValue("descripcion", description);
+            emp.crearOrdenTrabajo(clientID, marca, modelo, patente, description);
+        }
 
-        emp.crearOrdenTrabajo(clientID, marca, modelo, patente, description);
         showOrdersMenu();
     }
 
@@ -395,7 +402,7 @@ public class ControllerTaller {
     }
 
     /*
-     * Sets a random employee to make the selected action
+     * Sets a random employee to perform the selected action
      */
     private void setEmployee() {
         emp = Util.getRandomEmployee();
